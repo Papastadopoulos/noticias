@@ -29,10 +29,10 @@
     font-family:"Segoe UI",Inter,system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
     line-height:1.6; min-height:100vh; -webkit-font-smoothing:antialiased;
   }
-  .wrap{max-width:1260px;margin:0 auto;padding:0 24px 40px}
+  .wrap{max-width:1260px;margin:0 auto;padding:0 24px 70px}
 
   header.mast{
-    padding:20px 0 12px;border-bottom:4px double var(--line);margin-bottom:6px;
+    padding:30px 0 16px;border-bottom:4px double var(--line);margin-bottom:6px;
   }
   .mast-top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
   h1{margin:0;font-family:var(--serif);font-size:clamp(30px,5vw,44px);line-height:1.05;
@@ -50,7 +50,7 @@
   html[data-theme="light"] .tico.moon{display:none}
   html[data-theme="dark"] .tico:not(.moon){display:none}
 
-  .stats{display:flex;flex-wrap:wrap;gap:8px 0;margin:0;padding:8px 0 0;}
+  .stats{display:flex;flex-wrap:wrap;gap:8px 0;margin:0;padding:14px 0 0;}
   .stat{display:flex;align-items:baseline;gap:8px;padding:0 22px 0 0;margin-right:22px;
     border-right:1px solid var(--line)}
   .stat:last-child{border-right:0;margin-right:0;padding-right:0}
@@ -58,9 +58,9 @@
   .stat .v{font-size:20px;font-weight:700;line-height:1.2;font-variant-numeric:tabular-nums}
   .v.ar{color:var(--ar)} .v.gl{color:var(--global)} .v.dp{color:var(--deporte)} .v.bd{color:var(--brand)}
 
-  .toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:10px 0 12px;
+  .toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:18px 0 18px;
     position:sticky;top:0;z-index:20;
-    background:var(--bg);padding:10px 0;border-bottom:1px solid var(--line)}
+    background:var(--bg);padding:12px 0;border-bottom:1px solid var(--line)}
   .search{flex:1 1 240px;min-width:200px;position:relative}
   .search input{width:100%;padding:10px 14px 10px 38px;border-radius:var(--radius);
     border:1px solid var(--line);background:var(--card);color:var(--txt);font-size:14.5px;outline:none}
@@ -89,12 +89,12 @@
   .grid{display:grid;grid-template-columns:1fr;gap:14px;align-content:start}
   .band{grid-column:1/-1;display:flex;justify-content:space-between;align-items:baseline;
     gap:12px;flex-wrap:wrap;font-family:var(--serif);font-size:clamp(20px,3vw,25px);
-    font-weight:700;color:var(--txt);margin:28px 0 12px;padding-top:12px;
+    font-weight:700;color:var(--txt);margin:48px 0 16px;padding-top:12px;
     border-top:2px solid var(--txt);border-bottom:0}
     .band-n{font-family:"Segoe UI",system-ui,sans-serif;font-size:11.5px;font-weight:700;
     letter-spacing:.06em;text-transform:uppercase;color:var(--txt-mute);white-space:nowrap}
   .card{border-bottom:1px solid var(--line);background:transparent;
-    padding:16px 0;display:grid;grid-template-columns:1fr;gap:12px}
+    padding:24px 0;display:grid;grid-template-columns:1fr;gap:12px}
   .c-main{display:grid;gap:10px;align-content:start;min-width:0}
   .c-side{display:grid;gap:14px;align-content:start;min-width:0}
   .ph{aspect-ratio:16/9;border-radius:var(--radius);overflow:hidden;background:var(--bg-soft)}
@@ -107,7 +107,7 @@
   .date{font-size:12.5px;color:var(--txt-mute);font-weight:600}
   .card h3{margin:0;font-family:var(--serif);font-size:24px;line-height:1.15;font-weight:700;letter-spacing:-.015em}
   .card p{margin:0;color:var(--txt-dim);font-size:15px;line-height:1.65}
-  .card .key{border-left:2px solid var(--line);padding:4px 0 4px 16px;
+  .key{border-left:2px solid var(--line);padding:4px 0 4px 16px;
     font-size:14px;color:var(--txt-dim);font-style:italic;line-height:1.55}
   .src{margin-top:auto;padding-top:10px;border-top:1px solid var(--line);
     display:flex;gap:6px 0;flex-wrap:wrap;align-items:baseline}
@@ -128,7 +128,7 @@
     .grid{grid-template-columns:1fr}
     .toolbar .ed-wrap{flex:1 1 100%;margin-top:4px}
     .toolbar select.ed{flex:1 1 100%}
-    .card{gap:12px;padding:14px 0}
+    .card{gap:12px;padding:20px 0}
     /* Ajustes móviles (auditoría Antigravity): menos padding, chips y stats más compactos */
     .wrap{padding:0 16px 40px}
     .chip{padding:6px 11px;font-size:12.5px}
@@ -146,8 +146,7 @@
 </style>
   <script>try{var t=localStorage.getItem("panel-tema");document.documentElement.setAttribute("data-theme",t==="dark"?"dark":"light")}catch(e){document.documentElement.setAttribute("data-theme","light")}</script>
   <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#101318" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#101318">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Panel Automotriz">
@@ -187,10 +186,10 @@
     </div>
   </div>
 
-  <main class="grid" id="grid" aria-label="Listado de noticias"></main>
+  <main class="grid" id="grid"></main>
 
-  <footer aria-label="Pie de página: instrucciones y fuentes">
-    <p><b>Cómo leerlo.</b> El selector <b>Edición</b> permite ir de una edición diaria a la sección <b>Todas las noticias</b>, que reúne el archivo completo agrupado por fecha; ahí el buscador filtra por cualquier palabra entre títulos, textos y fuentes. Los filtros por Argentina, Global y Deportes se aplican a la sección visible.</p>
+  <footer>
+    <p><b>Cómo leerlo.</b> El selector <b>Edición</b> permite ir de una edición diaria a la sección <b>Todas las noticias</b>, que reúne el archivo completo agrupado por fecha; ahí el buscador filtra por cualquier palabra entre títulos, textos y fuentes. Los filtros por Argentina, Global y Deportes se aplican a la sección visible. Abrilo con doble clic en cualquier navegador: no necesita internet ni servidor.</p>
     <p><b>Fuentes.</b> Reuters, CNBC, NHTSA, ACARA, ADEFA, Automotive News, Nikkei Asia, iEVChina, BBC, DW, The Guardian, FORMULA 1, FIA, WRC, RACER, Euronews, just-auto, Renault Media, La Nación, Clarín, Infobae, TN, El Economista, Ámbito, iProfesional, Autoweb, La Voz, La Prensa, Marca, AS, France 24, Autocosmos, Carscoops, ClubAlfa, MarkLines y Noticias Argentinas. <b>Imágenes de referencia:</b> Wikimedia Commons (descargadas localmente en <code>img/</code>).</p>
     <p id="foot-fecha"></p>
   </footer>
@@ -721,21 +720,21 @@ function render(){
     return ((n.titulo || "") + " " + (Array.isArray(n.texto) ? n.texto.join(" ") : (n.texto || "")).replace(/<\/?b>/g, "") + " " + (n.clave || "") + " " + (n.fuentes ? n.fuentes.map(f => f.t).join(" ") : ""))
       .toLowerCase().includes(q);
   };
-  const card = (n, edTitulo, isFirst) => `
-    <article class="card" data-region="${n.region}" aria-label="${esc(n.titulo)}">
+  const card = (n, edTitulo) => `
+    <article class="card" data-region="${n.region}">
       <div class="c-main">
         <div class="tags">
           <span class="tag ${REGION[n.region]?.cls || 'global'}">${REGION[n.region]?.label || n.region}</span>
           <span class="date">${esc(n.fecha)}</span>
         </div>
-        ${n.img ? `<div class="ph"><img src="${n.img}" alt="${esc(n.titulo)}" loading="${isFirst ? 'eager' : 'lazy'}"${isFirst ? ' fetchpriority="high"' : ''} onerror="this.closest('.ph').remove()"></div>` : ""}
+        ${n.img ? `<div class="ph"><img src="${n.img}" alt="" loading="lazy" onerror="this.closest('.ph').remove()"></div>` : ""}
         <h3>${esc(n.titulo)}</h3>
-        <p class="key">${esc(n.clave)}</p>
+        <div class="key">${esc(n.clave)}</div>
       </div>
       <div class="c-side">
         ${(Array.isArray(n.texto) ? n.texto : [n.texto]).map(p => `<p>${fmt(p)}</p>`).join("")}
         <div class="src">
-          ${(n.fuentes || []).map(f => `<a href="${f.url}" target="_blank" rel="noopener noreferrer" title="${esc(f.t)}">${esc(f.t)} ↗</a>`).join("")}
+          ${(n.fuentes || []).map(f => `<a href="${f.url}" target="_blank" rel="noopener noreferrer">${esc(f.t)} ↗</a>`).join("")}
         </div>
       </div>
     </article>`;
@@ -751,10 +750,10 @@ function render(){
       .filter(g => g.notas.length);
     grid.innerHTML = grupos.length
       ? grupos.map(g =>
-          `<h2 class="band">${esc(g.titulo)}<span class="band-n" aria-hidden="true">${g.notas.length} nota${g.notas.length === 1 ? "" : "s"}</span></h2>` +
-          g.notas.map((n, i) => card(n, g.titulo, i === 0)).join("")
+          `<h2 class="band">${esc(g.titulo)}<span class="band-n">${g.notas.length} nota${g.notas.length === 1 ? "" : "s"}</span></h2>` +
+          g.notas.map(n => card(n, g.titulo)).join("")
         ).join("")
-      : `<h2 class="band">Todas las noticias<span class="band-n" aria-hidden="true">0 notas</span></h2>` + vacio;
+      : `<h2 class="band">Todas las noticias<span class="band-n">0 notas</span></h2>` + vacio;
     return;
   }
 
@@ -762,8 +761,8 @@ function render(){
   pintarStats(ed.notas, EDICIONES.length);
   el("#foot-fecha").innerHTML = "<b>Sección activa:</b> " + (ed.titulo || ed.fecha) + ".";
   const lista = ed.notas.filter(match);
-  const banda = `<h2 class="band">${esc(ed.titulo || ed.fecha)}<span class="band-n" aria-hidden="true">${lista.length} nota${lista.length === 1 ? "" : "s"}${lista.length !== ed.notas.length ? " de " + ed.notas.length : ""}</span></h2>`;
-  grid.innerHTML = lista.length ? banda + lista.map((n, i) => card(n, undefined, i === 0)).join("") : banda + vacio;
+  const banda = `<h2 class="band">${esc(ed.titulo || ed.fecha)}<span class="band-n">${lista.length} nota${lista.length === 1 ? "" : "s"}${lista.length !== ed.notas.length ? " de " + ed.notas.length : ""}</span></h2>`;
+  grid.innerHTML = lista.length ? banda + lista.map(n => card(n)).join("") : banda + vacio;
 }
 
 /* ---------- Controles ---------- */
