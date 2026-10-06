@@ -9,16 +9,16 @@
   :root{
     --bg:#101318; --bg-soft:#171b22; --card:#151a21; --line:#272d37;
     --txt:#e7eaef; --txt-dim:#a9b1bd; --txt-mute:#8a93a1;
-    --brand:#6aa0e8; --on-brand:#0e1524;
-    --ar:#3fcf7e; --global:#e0952f; --deporte:#ab8bf3;
+    --brand:#5b8fd6; --on-brand:#0e1524;
+    --ar:#2fae68; --global:#c9821f; --deporte:#9779e0;
     --shadow:0 1px 2px rgba(0,0,0,.35); --radius:6px;
     --serif:Georgia,"Times New Roman",Times,serif;
   }
   html[data-theme="light"]{
     --bg:#ffffff; --bg-soft:#f6f6f3; --card:transparent; --line:#dcdfe4;
     --txt:#1b1e24; --txt-dim:#4e545f; --txt-mute:#6b7280;
-    --brand:#2f5fb3; --on-brand:#ffffff;
-    --ar:#15803d; --global:#b45309; --deporte:#7c3aed;
+    --brand:#3568c4; --on-brand:#ffffff;
+    --ar:#148548; --global:#b95c0e; --deporte:#8449f0;
     --shadow:0 1px 2px rgba(20,24,32,.08);
   }
   *{box-sizing:border-box}
@@ -94,7 +94,8 @@
     .band-n{font-family:"Segoe UI",system-ui,sans-serif;font-size:11.5px;font-weight:700;
     letter-spacing:.06em;text-transform:uppercase;color:var(--txt-mute);white-space:nowrap}
   .card{border-bottom:1px solid var(--line);background:transparent;
-    padding:24px 0;display:grid;grid-template-columns:1fr;gap:12px}
+    padding:30px 0;display:grid;grid-template-columns:1fr;gap:12px}
+  .card:has(+ .band){border-bottom:0}
   .c-head{display:grid;gap:8px;min-width:0;grid-column:1/-1}
   .c-main{display:grid;gap:10px;align-content:start;min-width:0}
   .c-side{display:grid;gap:14px;align-content:start;min-width:0}
@@ -108,12 +109,13 @@
   .date{font-size:12.5px;color:var(--txt-mute);font-weight:600}
   .card h3{margin:0;font-family:var(--serif);font-size:24px;line-height:1.15;font-weight:700;letter-spacing:-.015em}
   .card p{margin:0;color:var(--txt-dim);font-size:15px;line-height:1.65}
-  .c-side p{max-width:70ch}
+  .c-side p{max-width:85ch}
   p b{font-weight:700;color:var(--txt)}
   .key{border-left:2px solid var(--line);padding:4px 0 4px 16px;
     font-size:14px;color:var(--txt-dim);font-style:italic;line-height:1.55}
   .src{margin-top:auto;padding-top:10px;border-top:1px solid var(--line);
     display:flex;gap:6px 0;flex-wrap:wrap;align-items:baseline}
+  .src-l{font-size:13px;font-weight:700;color:var(--txt-mute);margin-right:6px}
   .src a{font-size:13px;font-weight:600;color:var(--txt-dim);text-decoration:none}
   .src a:hover{color:var(--brand);text-decoration:underline}
   .src a + a::before{content:" · ";margin:0 10px;color:var(--txt-mute);text-decoration:none}
@@ -740,6 +742,7 @@ function render(){
       <div class="c-side">
         ${(Array.isArray(n.texto) ? n.texto : [n.texto]).map(p => `<p>${fmt(p)}</p>`).join("")}
         <div class="src">
+          ${(n.fuentes || []).length ? '<span class="src-l">Fuentes:</span>' : ""}
           ${(n.fuentes || []).map(f => `<a href="${f.url}" target="_blank" rel="noopener noreferrer">${esc(f.t)} ↗</a>`).join("")}
         </div>
       </div>
