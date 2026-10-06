@@ -54,7 +54,7 @@
   .stat{display:flex;align-items:baseline;gap:8px;padding:0 22px 0 0;margin-right:22px;
     border-right:1px solid var(--line)}
   .stat:last-child{border-right:0;margin-right:0;padding-right:0}
-  .stat .k{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--txt-mute);font-weight:700}
+  .stat .k{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--txt-mute);font-weight:700}
   .stat .v{font-size:20px;font-weight:700;line-height:1.2;font-variant-numeric:tabular-nums}
   .v.ar{color:var(--ar)} .v.gl{color:var(--global)} .v.dp{color:var(--deporte)} .v.bd{color:var(--brand)}
 
@@ -82,7 +82,7 @@
   select.ed{border:1px solid var(--line);background:var(--card);color:var(--txt);
     padding:9px 12px;border-radius:var(--radius);font-size:13.5px;font-weight:600;outline:none;cursor:pointer;max-width:100%}
   .ed-wrap{display:flex;align-items:center;gap:8px;min-width:0}
-  .ed-lbl{font-size:11px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;
+  .ed-lbl{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;
     color:var(--txt-mute);white-space:nowrap}
   .btn:focus-visible, .chip:focus-visible, .ed:focus-visible, .search input:focus-visible, .src a:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
 
@@ -92,7 +92,7 @@
     font-weight:700;color:var(--txt);margin:48px 0 16px;padding-top:12px;
     border-top:2px solid var(--txt);border-bottom:0}
     .band-n{font-family:"Segoe UI",system-ui,sans-serif;font-size:11.5px;font-weight:700;
-    letter-spacing:.09em;text-transform:uppercase;color:var(--txt-mute);white-space:nowrap}
+    letter-spacing:.06em;text-transform:uppercase;color:var(--txt-mute);white-space:nowrap}
   .card{border-bottom:1px solid var(--line);background:transparent;
     padding:24px 0;display:grid;grid-template-columns:1fr;gap:12px}
   .c-main{display:grid;gap:10px;align-content:start;min-width:0}
@@ -100,7 +100,7 @@
   .ph{aspect-ratio:16/9;border-radius:var(--radius);overflow:hidden;background:var(--bg-soft)}
   .ph img{width:100%;height:100%;object-fit:cover;display:block}
   .tags{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-  .tag{font-size:10px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase}
+  .tag{font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
   .tag.ar{color:var(--ar)}
   .tag.global{color:var(--global)}
   .tag.deporte{color:var(--deporte)}
@@ -182,7 +182,7 @@
     </div>
     <div class="ed-wrap">
       <label class="ed-lbl" for="edicion">Edición</label>
-      <select class="ed" id="edicion" aria-label="Filtrar por edición o ver archivo completo"></select>
+      <select class="ed" id="edicion" autocomplete="off" aria-label="Filtrar por edición o ver archivo completo"></select>
     </div>
   </div>
 
@@ -699,7 +699,10 @@ EDICIONES.forEach((e, i) => {
   sel.appendChild(o);
 });
 edicionIdx = 0;
-sel.value = "0";
+const syncSel = () => { sel.value = vistaTodas ? "todas" : String(edicionIdx); };
+syncSel();
+setTimeout(syncSel, 0); // por si el navegador restaura el valor del select después de cargar
+window.addEventListener("pageshow", syncSel);
 sel.onchange = () => {
   if (sel.value === "todas") { vistaTodas = true; }
   else { vistaTodas = false; edicionIdx = +sel.value; }
