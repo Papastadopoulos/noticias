@@ -8,7 +8,7 @@
 <style>
   :root{
     --bg:#101318; --bg-soft:#171b22; --card:#151a21; --line:#272d37;
-    --txt:#e7eaef; --txt-dim:#a9b1bd; --txt-mute:#79818e;
+    --txt:#e7eaef; --txt-dim:#a9b1bd; --txt-mute:#8a93a1;
     --brand:#6aa0e8; --on-brand:#0e1524;
     --ar:#3fcf7e; --global:#e0952f; --deporte:#ab8bf3;
     --shadow:0 1px 2px rgba(0,0,0,.35); --radius:6px;
@@ -16,7 +16,7 @@
   }
   html[data-theme="light"]{
     --bg:#ffffff; --bg-soft:#f6f6f3; --card:transparent; --line:#dcdfe4;
-    --txt:#1b1e24; --txt-dim:#4e545f; --txt-mute:#7d838e;
+    --txt:#1b1e24; --txt-dim:#4e545f; --txt-mute:#6b7280;
     --brand:#2f5fb3; --on-brand:#ffffff;
     --ar:#15803d; --global:#b45309; --deporte:#7c3aed;
     --shadow:0 1px 2px rgba(20,24,32,.08);
@@ -29,7 +29,7 @@
     font-family:"Segoe UI",Inter,system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
     line-height:1.6; min-height:100vh; -webkit-font-smoothing:antialiased;
   }
-  .wrap{max-width:1260px;margin:0 auto;padding:0 24px 70px}
+  .wrap{max-width:1440px;margin:0 auto;padding:0 24px 70px}
 
   header.mast{
     padding:30px 0 16px;border-bottom:4px double var(--line);margin-bottom:6px;
@@ -95,6 +95,7 @@
     letter-spacing:.06em;text-transform:uppercase;color:var(--txt-mute);white-space:nowrap}
   .card{border-bottom:1px solid var(--line);background:transparent;
     padding:24px 0;display:grid;grid-template-columns:1fr;gap:12px}
+  .c-head{display:grid;gap:8px;min-width:0;grid-column:1/-1}
   .c-main{display:grid;gap:10px;align-content:start;min-width:0}
   .c-side{display:grid;gap:14px;align-content:start;min-width:0}
   .ph{aspect-ratio:16/9;border-radius:var(--radius);overflow:hidden;background:var(--bg-soft)}
@@ -107,6 +108,8 @@
   .date{font-size:12.5px;color:var(--txt-mute);font-weight:600}
   .card h3{margin:0;font-family:var(--serif);font-size:24px;line-height:1.15;font-weight:700;letter-spacing:-.015em}
   .card p{margin:0;color:var(--txt-dim);font-size:15px;line-height:1.65}
+  .c-side p{max-width:70ch}
+  p b{font-weight:700;color:var(--txt)}
   .key{border-left:2px solid var(--line);padding:4px 0 4px 16px;
     font-size:14px;color:var(--txt-dim);font-style:italic;line-height:1.55}
   .src{margin-top:auto;padding-top:10px;border-top:1px solid var(--line);
@@ -115,12 +118,13 @@
   .src a:hover{color:var(--brand);text-decoration:underline}
   .src a + a::before{content:" · ";margin:0 10px;color:var(--txt-mute);text-decoration:none}
   @media (min-width:900px){
-    .card{grid-template-columns:minmax(300px,38%) 1fr;column-gap:34px;align-items:start}
+    .card{grid-template-columns:minmax(300px,38%) 1fr;column-gap:34px;row-gap:14px;align-items:start}
   }
   .empty{grid-column:1/-1;text-align:center;padding:48px 16px;color:var(--txt-mute);
     border:1px dashed var(--line);border-radius:var(--radius)}
 
   footer{margin-top:30px;color:var(--txt-mute);font-size:13px;line-height:1.75}
+  footer p{max-width:78ch}
   footer code{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
     padding:1px 6px;color:var(--txt-dim);font-size:12.5px}
 
@@ -131,7 +135,7 @@
     .card{gap:12px;padding:20px 0}
     /* Ajustes móviles (auditoría Antigravity): menos padding, chips y stats más compactos */
     .wrap{padding:0 16px 40px}
-    .chip{padding:6px 11px;font-size:12.5px}
+    .chip{padding:11px 13px;font-size:12.5px}
     .chips{gap:6px}
     .stat{padding-right:12px;margin-right:12px}
     .band,.band:first-child{margin-top:24px;margin-bottom:12px}
@@ -722,13 +726,15 @@ function render(){
   };
   const card = (n, edTitulo) => `
     <article class="card" data-region="${n.region}">
-      <div class="c-main">
+      <div class="c-head">
         <div class="tags">
           <span class="tag ${REGION[n.region]?.cls || 'global'}">${REGION[n.region]?.label || n.region}</span>
           <span class="date">${esc(n.fecha)}</span>
         </div>
-        ${n.img ? `<div class="ph"><img src="${n.img}" alt="" loading="lazy" onerror="this.closest('.ph').remove()"></div>` : ""}
         <h3>${esc(n.titulo)}</h3>
+      </div>
+      <div class="c-main">
+        ${n.img ? `<div class="ph"><img src="${n.img}" alt="" loading="lazy" onerror="this.closest('.ph').remove()"></div>` : ""}
         <div class="key">${esc(n.clave)}</div>
       </div>
       <div class="c-side">
