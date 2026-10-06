@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Panel Automotriz · Noticias de la industria</title>
+<meta name="description" content="Dashboard de noticias de la industria automotriz, con prioridad en Argentina y cobertura global. Se actualiza a diario.">
+<style>
+  :root{
+    --bg:#101318; --bg-soft:#171b22; --card:#151a21; --line:#272d37;
+    --txt:#e7eaef; --txt-dim:#a9b1bd; --txt-mute:#79818e;
+    --brand:#6aa0e8; --on-brand:#0e1524;
+    --ar:#3fcf7e; --global:#e0952f; --deporte:#ab8bf3;
+    --shadow:0 1px 2px rgba(0,0,0,.35); --radius:10px;
+    --serif:Georgia,"Times New Roman",Times,serif;
+  }
+  html[data-theme="light"]{
+    --bg:#ffffff; --bg-soft:#f6f6f3; --card:transparent; --line:#dcdfe4;
+    --txt:#1b1e24; --txt-dim:#4e545f; --txt-mute:#7d838e;
+    --brand:#2f5fb3; --on-brand:#ffffff;
+    --ar:#15803d; --global:#b45309; --deporte:#7c3aed;
+    --shadow:0 1px 2px rgba(20,24,32,.08);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg);
+    color:var(--txt);
+    font-family:"Segoe UI",Inter,system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.6; min-height:100vh; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1260px;margin:0 auto;padding:0 24px 70px}
+
+  header.mast{
+    padding:30px 0 16px;border-bottom:4px double var(--line);margin-bottom:6px;
+  }
+  .mast-top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+  h1{margin:0;font-family:var(--serif);font-size:clamp(30px,5vw,44px);line-height:1.05;
+    font-weight:700;letter-spacing:-.01em;color:var(--txt)}
+  .mast-line{margin:8px 0 0;font-size:13px;color:var(--txt-mute);letter-spacing:.04em;
+    text-transform:uppercase;font-weight:600}
+  .mast-line b{color:var(--txt-dim);font-weight:700}
+  .btn{border:1px solid var(--line);background:var(--card);color:var(--txt-dim);
+    border-radius:8px;padding:8px 13px;cursor:pointer;font-size:13.5px;font-weight:600;
+    transition:border-color .12s ease,color .12s ease}
+  .btn:hover{border-color:var(--brand);color:var(--txt)}
+
+  .stats{display:flex;flex-wrap:wrap;gap:8px 0;margin:0;padding:14px 0 0;}
+  .stat{display:flex;align-items:baseline;gap:8px;padding:0 22px 0 0;margin-right:22px;
+    border-right:1px solid var(--line)}
+  .stat:last-child{border-right:0;margin-right:0;padding-right:0}
+  .stat .k{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--txt-mute);font-weight:700}
+  .stat .v{font-size:20px;font-weight:700;line-height:1.2;font-variant-numeric:tabular-nums}
+  .v.ar{color:var(--ar)} .v.gl{color:var(--global)} .v.dp{color:var(--deporte)} .v.bd{color:var(--brand)}
+
+  .toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:18px 0 18px;
+    position:sticky;top:0;z-index:20;
+    background:var(--bg);padding:12px 0;border-bottom:1px solid var(--line)}
+  .search{flex:1 1 240px;min-width:200px;position:relative}
+  .search input{width:100%;padding:10px 14px 10px 38px;border-radius:8px;
+    border:1px solid var(--line);background:var(--card);color:var(--txt);font-size:14.5px;outline:none}
+  .search input:focus{border-color:var(--brand);box-shadow:0 0 0 3px color-mix(in srgb, var(--brand) 22%, transparent)}
+  .search .ic{position:absolute;left:13px;top:50%;transform:translateY(-50%);
+    width:15px;height:15px;fill:var(--txt-mute);pointer-events:none}
+  .chips{display:flex;gap:8px;flex-wrap:wrap}
+  .chip{border:1px solid var(--line);background:transparent;color:var(--txt-dim);
+    padding:8px 13px;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;
+    transition:border-color .12s ease,color .12s ease,background .12s ease}
+  .chip:hover{color:var(--txt);border-color:var(--txt-mute)}
+  .chip.on{color:var(--on-brand);border-color:var(--brand);background:var(--brand)}
+  .chip.on.ar{background:var(--ar);border-color:var(--ar);color:#0c130e}
+  .chip.on.gl{background:var(--global);border-color:var(--global);color:#1a1206}
+  .chip.on.dp{background:var(--deporte);border-color:var(--deporte);color:#140a24}
+  html[data-theme="light"] .chip.on.ar{color:#fff}
+  html[data-theme="light"] .chip.on.gl{color:#fff}
+  html[data-theme="light"] .chip.on.dp{color:#fff}
+  select.ed{border:1px solid var(--line);background:var(--card);color:var(--txt);
+    padding:9px 12px;border-radius:8px;font-size:13.5px;font-weight:600;outline:none;cursor:pointer;max-width:100%}
+  .btn:focus-visible, .chip:focus-visible, .ed:focus-visible, .search input:focus-visible, .src a:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+
+  .grid{display:grid;grid-template-columns:1fr;gap:14px;align-content:start}
+  .band{grid-column:1/-1;display:flex;justify-content:space-between;align-items:baseline;
+    gap:12px;flex-wrap:wrap;font-family:var(--serif);font-size:clamp(20px,3vw,25px);
+    font-weight:700;color:var(--txt);margin:48px 0 16px;padding-top:12px;
+    border-top:2px solid var(--txt);border-bottom:0}
+  .band:first-child{margin-top:48px}
+  .band-n{font-family:"Segoe UI",system-ui,sans-serif;font-size:11.5px;font-weight:700;
+    letter-spacing:.09em;text-transform:uppercase;color:var(--txt-mute);white-space:nowrap}
+  .card{border-bottom:1px solid var(--line);background:transparent;
+    padding:24px 0;display:grid;grid-template-columns:1fr;gap:12px;
+    transition:border-color .15s ease}
+  .card:hover{border-color:var(--brand)}
+  .c-main{display:grid;gap:10px;align-content:start;min-width:0}
+  .c-side{display:grid;gap:14px;align-content:start;min-width:0}
+  .ph{aspect-ratio:16/9;border-radius:6px;overflow:hidden;background:var(--bg-soft)}
+  .ph img{width:100%;height:100%;object-fit:cover;display:block}
+  .tags{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .tag{font-size:10px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase}
+  .tag.ar{color:var(--ar)}
+  .tag.global{color:var(--global)}
+  .tag.deporte{color:var(--deporte)}
+  .date{font-size:12.5px;color:var(--txt-mute);font-weight:600}
+  .date.ed{margin-left:auto;text-align:right}
+  .card h3{margin:0;font-family:var(--serif);font-size:24px;line-height:1.15;font-weight:700;letter-spacing:-.015em}
+  .card p{margin:0;color:var(--txt-dim);font-size:15px}
+  .key{border-left:2px solid var(--brand);padding:4px 0 4px 16px;
+    font-size:14px;color:var(--txt-dim);font-style:italic}
+  .key b{color:var(--brand)}
+  .src{margin-top:auto;padding-top:10px;border-top:1px solid var(--line);
+    display:flex;gap:6px 0;flex-wrap:wrap;align-items:baseline}
+  .src a{font-size:13px;font-weight:600;color:var(--txt-dim);text-decoration:none}
+  .src a:hover{color:var(--brand);text-decoration:underline}
+  .src a + a::before{content:"�";margin:0 10px;color:var(--txt-mute);text-decoration:none}
+  @media (min-width:900px){
+    .card{grid-template-columns:minmax(300px,38%) 1fr;column-gap:34px;align-items:start}
+  }
+  .empty{grid-column:1/-1;text-align:center;padding:48px 16px;color:var(--txt-mute);
+    border:1px dashed var(--line);border-radius:var(--radius)}
+
+  footer{margin-top:30px;color:var(--txt-mute);font-size:13px;line-height:1.75}
+  footer code{background:var(--card);border:1px solid var(--line);border-radius:6px;
+    padding:1px 6px;color:var(--txt-dim);font-size:12.5px}
+
+  @media (max-width:620px){
+    .grid{grid-template-columns:1fr}
+    .toolbar select.ed{flex:1 1 100%;margin-top:4px}
+    .card{gap:12px;padding:20px 0}
+    /* Ajustes móviles (auditoría Antigravity): menos padding, chips y stats más compactos */
+    .wrap{padding:0 16px 40px}
+    .chip{padding:6px 11px;font-size:12.5px}
+    .chips{gap:6px}
+    .stat{padding-right:12px;margin-right:12px}
+    .band,.band:first-child{margin-top:24px;margin-bottom:12px}
+    .tags .date.ed{margin-left:0;text-align:left;width:100%}
+  }
+  @media print{
+    body{background:#fff;color:#000}
+    .toolbar,.btn{display:none!important}
+    .card{break-inside:avoid;box-shadow:none;border:1px solid #ddd;background:#fff}
+    header.mast{border-color:#ddd}
+    .band{border-color:#bbb}
+  }
+</style>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#101318">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Panel Automotriz">
+  <link rel="apple-touch-icon" href="img/icon-192.png">
+</head>
+<body>
+<div class="wrap">
+
+  <header class="mast">
+    <div class="mast-top">
+      <div>
+        <h1>Panel Automotriz</h1>
+        <p class="mast-line"><b id="mast-fecha"></b> · Noticias de la industria automotriz · Argentina y el mundo</p>
+      </div>
+      <button class="btn" id="themeBtn" title="Cambiar tema">🌙 Tema</button>
+    </div>
+    <div class="stats" id="stats"></div>
+  </header>
+
+  <div class="toolbar">
+    <div class="search">
+      <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M10.5 3a7.5 7.5 0 1 0 4.55 13.46l4.24 4.24 1.42-1.42-4.24-4.24A7.5 7.5 0 0 0 10.5 3zm0 2a5.5 5.5 0 1 1 0 11 5.5 5.5 0 0 1 0-11z"/></svg>
+      <input type="search" id="q" placeholder="Buscar noticia, marca o palabra…" aria-label="Buscar noticia por palabra">
+    </div>
+    <div class="chips" id="chips">
+      <button class="chip on" data-f="all" aria-pressed="true">Todas</button>
+      <button class="chip ar" data-f="ar" aria-pressed="false">Argentina</button>
+      <button class="chip gl" data-f="global" aria-pressed="false">Global</button>
+      <button class="chip dp" data-f="deporte" aria-pressed="false">Deportes</button>
+    </div>
+    <select class="ed" id="edicion" aria-label="Elegir fecha"></select>
+  </div>
+
+  <main class="grid" id="grid"></main>
+
+  <footer>
+    <p><b>Cómo leerlo.</b> El selector de arriba permite ir de una edición diaria a la sección <b>Todas las noticias</b>, que reúne el archivo completo agrupado por fecha; ahí el buscador filtra por cualquier palabra entre títulos, textos y fuentes. Los filtros por Argentina, Global y Deportes se aplican a la sección visible. Abrilo con doble clic en cualquier navegador: no necesita internet ni servidor.</p>
+    <p><b>Cómo se mantiene actualizado.</b> Para sumar el resumen de un día nuevo, pedile a OpenWork que actualice el bloque <code>EDICIONES</code> de este archivo: cada sección es un día, la más nueva va arriba de todo, las anteriores se conservan y el archivo crece día a día.</p>
+    <p><b>Fuentes.</b> Reuters, CNBC, NHTSA, ACARA, ADEFA, Automotive News, Nikkei Asia, iEVChina, BBC, DW, The Guardian, FORMULA 1, FIA, WRC, RACER, Euronews, just-auto, Renault Media, La Nación, Clarín, Infobae, TN, El Economista, Ámbito, iProfesional, Autoweb, La Voz, La Prensa, Marca, AS, France 24, Autocosmos, Carscoops, ClubAlfa, MarkLines y Noticias Argentinas. <b>Imágenes de referencia:</b> Wikimedia Commons (descargadas localmente en <code>img/</code>).</p>
+    <p id="foot-fecha"></p>
+  </footer>
+</div>
+
+<script>
+/* =========================================================================
+   DATOS DEL PANEL
+   Para actualizar: pedile a OpenWork que agregue una sección nueva (un día)
+   al inicio del array EDICIONES. La más nueva va primero y las de fechas
+   anteriores se ordenan de mayor a menor; "anteriores" cierra la lista.
+   Cada nota acepta num, region ("ar" | "global" | "deporte"),
+   fecha, titulo, texto, clave y fuentes [{ t, url }].
+   ========================================================================= */
+const EDICIONES = [
+  {
+    fecha: "2026-10-03",
+    titulo: "Sábado 3 de octubre de 2026",
+    notas: [
+      {
+        num: 1, region: "deporte", fecha: "3 de octubre de 2026",
+        titulo: "Verstappen logró su primera pole del año en Sepang y Colapinto, décimoquinto, largará desde el fondo con dos sanciones",
+        texto: ["El Gran Premio de Baréin se disputa este fin de semana en el Circuito Internacional de Sepang, en Malasia, trasladado por el conflicto en Oriente Medio: es la primera vez que la F1 corre allí desde 2017. En la clasificación del sábado, <b>Max Verstappen sacó la pole por primera vez en 2026</b>, con 0,298 segundos de ventaja sobre Lewis Hamilton en el Ferrari, mientras su compañero Isack Hadjar fue tercero pero arranca con una sanción de cinco posiciones por cambiar el motor por encima de la asignación de la temporada; así, Kimi Antonelli, cuarto más rápido, y Charles Leclerc suben al segundo renglón de la grilla, y George Russell, octavo, escala un lugar. <b>Es la primera pole del año para un motor que no es Mercedes</b>, después de que Mercedes, McLaren y Alpine, todos con motor Mercedes, hayan dominado todas las clasificaciones hasta ahora; para Verstappen es un paso hacia evitar su primera temporada sin victorias desde su debut como novato en 2015, y venció la última vez que la F1 corrió en Sepang, en 2017.", "Franco Colapinto terminó décimoquinto con Alpine, tras haber sido noveno en la tercera práctica libre, pero <b>largará vigésimo primer lugar</b>, penúltimo, porque arrastra dos sanciones: una por el choque que protagonizó en el Gran Premio de Azerbaiyán y otra por cambiar el motor de combustión interna.", "El argentino se mostró esperanzado: Sepang tiene muchas frenadas y rectas largas que ayudan a adelantar, así que \"se puede remontar\", y explicó que guardó un par de neumáticos para la carrera, que se corre <b>este domingo 4 de octubre a las 4 (hora argentina)</b>. Fernando Alonso fue el mejor de Aston Martin en el puesto 12, y el fin de semana dejó a un Mercedes fuera de ritmo: Sepang tiene un asfalto abrasivo que sobrecalienta los neumáticos, denunció Russell."],
+        clave: "Primera pole del año para Verstappen · Hadjar, tercero, con +5 por cambio de motor · Colapinto fue 15° y largará 21° con dos sanciones · carrera el domingo 4 a las 4",
+                img: "img/01-verstappen-pole.jpg",
+        fuentes: [
+          { t: "AP News (vía ABC News)", url: "https://abcnews.com/Sports/wireStory/verstappen-takes-pole-position-year-f1s-bahrain-grand-136968851" },
+          { t: "Agencia NA", url: "https://noticiasargentinas.com/deportes/colapinto-se-mostro-esperanzado-pese-a-que-largara-desde-el-fondo-en-sepang---se-puede-remontar-_a6ac0e858bd9cfb5d37e5209b" },
+          { t: "El Mundo", url: "https://www.elmundo.es/deportes/formula-1/2026/10/03/6ac10e4d21efa063798b4578.html" },
+          { t: "WRAL (vía AP)", url: "https://www.wral.com/news/ap/c3519-verstappen-takes-his-first-pole-position-of-the-year-at-f1s-bahrain-grand-prix-in-malaysia/" }
+        ]
+      },
+      {
+        num: 2, region: "deporte", fecha: "3 de octubre de 2026",
+        titulo: "Solberg tomó la punta en Cerdeña y la retirada de Neuville reabre el Mundial de rally",
+        texto: ["El Rally Italia Sardegna, ronda final del Mundial, se dio vuelta en la mañana del sábado. Thierry Neuville, que lideraba desde el viernes, ganó la primera prueba de la jornada, Lerno, aprovechando que salía último en el orden de limpieza de pista, pero <b>Oliver Solberg lo pasó al ganar Coiluna-Loelle por 11,1 segundos</b> y se llevó además los seis segundos de la nueva Solorche, con lo que quedó 2,7 segundos arriba tras el primer loop.", "Después, en el primer kilómetro del segundo pasaje de Lerno, el Hyundai de Neuville sufrió daños en la parte trasera y <b>se retiró desde el segundo lugar</b>, un revés que reordenó el campeonato: Sébastien Ogier subió al segundo puesto a 36,6 segundos de Solberg, Adrien Fourmaux quedó tercero a 19,1 de Ogier después de haber pinchado en la primera prueba del sábado, Sami Pajari avanzó al cuarto lugar a 24,4 del podio y Elfyn Evans, el líder del título, quedó quinto a 52,5 segundos de Pajari, sin poder responder por la limpieza de pista, ya que salía mucho antes que sus rivales.", "Con los puntos proyectados, Evans terminaría la temporada con 240, Solberg con 234 y Pajari con 225, más los 10 puntos que se reparten este domingo: <b>si Solberg gana, el título se define hasta el final</b>. Mártinó Sesks también se retiró, por un problema de dirección, y perdió el décimo lugar."],
+        clave: "Solberg pasó a Neuville y luego el belga se retiró · Ogier a 36,6s, Fourmaux a 19,1s de Ogier y Pajari cuarto · proyección: Evans 240, Solberg 234, Pajari 225 ·10 puntos el domingo",
+                img: "img/02-solberg-wrc.jpg",
+        fuentes: [
+          { t: "DirtFish (Solberg líder)", url: "https://dirtfish.com/rally/wrc/wrc-title-race-wide-open-as-solberg-takes-sardinia-lead/" },
+          { t: "DirtFish (retiro de Neuville)", url: "https://dirtfish.com/rally/wrc/neuville-retires-in-sardinia-altering-wrc-title-race-further/" },
+          { t: "Rally Italia Sardegna (viernes)", url: "https://rallyitaliasardegna.com/2026/10/02/hyundai-duel-at-rally-italia-sardegna-neuville-leads-after-friday/?lang=en" }
+        ]
+      },
+      {
+        num: 3, region: "ar", fecha: "3 de octubre de 2026",
+        titulo: "La Expo Auto Chino cumple su segunda jornada en Costa Salguero y Xinhua resalta la calidad de los autos chinos",
+        texto: ["La primera Expo Auto Chino de Argentina vive este sábado 3 de octubre su segunda jornada en el predio BA Ferial Costa Salguero, de 11 a 20, después del debut del viernes de 13 a 20, y cierra el domingo con la misma franja horaria. <b>La entrada general cuesta $30.000 por día</b> y permite comprar hasta seis entradas por persona por jornada.", "La muestra reúne <b>26 marcas confirmadas, más de 100 modelos y 15 lanzamientos</b> en poco más de 13.000 metros cuadrados de pabellones cubiertos, con una convocatoria estimada en 20.000 visitantes para los tres días. La agencia Xinhua cubrió la muestra desde Buenos Aires con fotografías de los vehículos exhibidos, entre ellos un eléctrico Dongfeng, y recogió las declaraciones de Luciano Varone, gerente comercial del grupo argentino Famly, importador de marcas chinas: \"los automóviles de origen chino superan en calidad y tecnología a sus contrincantes occidentales\", afirmó el viernes en el evento.", "Entre las novedades del fin de semana, Leapmotor presenta sus SUV B10 y C10 con autonomías de 900 y 1.000 kilómetros, Omoda & Jaecoo hace su primera aparición pública en el país y Geely anuncia su estructura deportiva Proracing para el TC2000; BYD, la mayor vendedora de eléctricos locales, <b>es la gran ausente</b>."],
+        clave: "Segunda jornada el sábado de 11 a 20 en Costa Salguero · 26 marcas y más de 100 modelos · entrada de $30.000 por día · Xinhua destacó la calidad china",
+                img: "img/03-expo-auto-chino.jpg",
+        fuentes: [
+          { t: "Xinhua (3 de octubre)", url: "https://spanish.xinhuanet.com/20261003/d87fc1709dd24bdeb2a30e59c75dcc05/c.html" },
+          { t: "Expo Auto Chino (sitio oficial)", url: "https://expoautochino.com.ar/" },
+          { t: "Ámbito", url: "https://www.ambito.com/autos/llega-expo-auto-chino-2026-mas-100-modelos-y-26-marcas-costa-salguero-n6327803" },
+          { t: "iProfesional", url: "https://www.iprofesional.com/autos/464660-se-viene-la-expo-auto-chino-en-argentina-y-habra-mas-de-100-modelos" }
+        ]
+      },
+      {
+        num: 4, region: "ar", fecha: "3 de octubre de 2026",
+        titulo: "Tucumán se llena de motos: en septiembre patentó 5.424 unidades y quedó cuarta en el país",
+        texto: ["En un mes en que los autos 0 km volvieron a caer, las dos ruedas siguen marcando la contramano. La Gaceta informó que en septiembre <b>Tucumán patentó 5.424 motocicletas</b>, cifra que la colocó como la cuarta provincia del país por volumen de motos, impulsada por costos accesibles y por la facilidad del crédito frente al mercado automotor. El segmento de hasta 110 centímetros cúbicos lidera las ventas, con modelos como la Honda Wave a la cabeza, y la tendencia de crecimiento sostenido se mantiene desde mayo, en claro contraste con la baja de los patentes de autos.", "El dato provincial se suma al panorama nacional: en septiembre se patentaron <b>80.113 motovehículos en todo el país, un 35,1% más que en el mismo mes de 2025 según ACARA</b>, empujados por el uso laboral del reparto y por un crédito cada vez más barato. La provincia vive así un cambio estructural en su movilidad: la moto se consolida como la opción predilecta frente a los costos diarios de mantenimiento, mientras el mercado de autos encadena <b>su sexta caída interanual del año</b>."],
+        clave: "5.424 motos en septiembre, cuarta provincia del país · líderes: hasta 110 cc (Honda Wave) · auge sostenido desde mayo · 80.113 motos en el país (+35,1%)",
+                img: "img/04-motos-tucuman.jpg",
+        fuentes: [
+          { t: "La Gaceta (3 de octubre)", url: "https://www.lagaceta.com.ar/nota/1156589/economia/tucuman-se-llena-motos-cuales-son-modelos-mas-patentados-cuanto-crecio-mercado.html" },
+          { t: "El Sol (récord nacional)", url: "https://www.elsol.com.ar/el-pais/boom-el-patentamiento-de-motos-busca-el-record-en-argentina" }
+        ]
+      }
+    ]
+  },
+  {
+    fecha: "2026-10-02",
+    titulo: "Viernes 2 de octubre de 2026",
+    notas: [
+      {
+        num: 1, region: "ar", fecha: "2, 3 y 4 de octubre de 2026",
+        titulo: "Hoy abre la Expo Auto Chino: el primer salón de Argentina dedicado enteramente a las marcas del gigante asiático",
+        texto: ["La Expo Auto Chino arranca este viernes 2 de octubre en el predio BA Ferial Costa Salguero de la Ciudad de Buenos Aires y se extiende hasta el domingo 4. Es la primera exposición del país dedicada exclusivamente a automotrices chinas y, según la organización, <b>el primer evento automovilístico de gran magnitud que se realiza en Argentina después de nueve años</b>. La muestra reúne <b>26 marcas confirmadas en más de 13.000 metros cuadrados</b> de pabellones cubiertos, con una convocatoria estimada en 20.000 visitantes.", "Abre este viernes de 13 a 20 y el sábado y el domingo de 11 a 20; <b>la entrada general cuesta $30.000 por jornada</b>, se vende por Mundo Ticket y permite comprar hasta seis entradas por persona por día. Está organizada por Dispar, con Nicolás Coppo a cargo, y Santander Argentina acompaña como sponsor.", "Entre las novedades confirmadas, Leapmotor presenta el lanzamiento local de sus SUV B10 y C10, con autonomías declaradas de 900 y 1.000 kilómetros, y adelanta en avant premier el modelo que llegará en 2027; Omoda & Jaecoo hace su primera presentación pública en el país con el Omoda 5, el Omoda 7 y un avance de Jaecoo; Forthing trae el sedán eléctrico de rango extendido S7 y la van híbrida V9; y JAC expone sus SUV y pick-up con una campaña comercial especial. <b>La gran ausente es BYD</b>, la marca que más vende eléctricos en Argentina, que decidió no participar por una definición interna y comercial."],
+        clave: "2 al 4 de octubre en Costa Salguero · 26 marcas · 13.000 m² · entrada de $30.000 por día · BYD, la gran ausente",
+                img: "img/05-expo-apertura.jpg",
+        fuentes: [
+          { t: "mercado.com.ar", url: "https://mercado.com.ar/movilidad/expo-auto-chino-2026-anticipa-novedades-de-las-marcas-que-participaran-del-evento" },
+          { t: "La Prensa", url: "https://www.laprensa.com.ar/La-primera-edicion-de-Expo-Auto-Chino-tiene-25-marcas-confirmadas-575617.note.aspx" },
+          { t: "La Voz (Elvio Orellana)", url: "https://www.lavoz.com.ar/clasificados-autos/cita-grande-autos-chinos-octubre-buenos-aires_0_3wuVyzbv3M.html" },
+          { t: "TN", url: "https://tn.com.ar/autos/novedades/2026/05/06/expo-auto-chino-argentina-tendra-su-primer-salon-dedicado-a-las-marcas-del-gigante-asiatico" }
+        ]
+      },
+      {
+        num: 2, region: "deporte", fecha: "1 al 4 de octubre de 2026",
+        titulo: "La F1 vuelve a Sepang con el GP de Baréin deslocalizado y Alonso recién renovado con Aston Martin",
+        texto: ["La Fórmula 1 vuelve este fin de semana a Sepang, casi una década después de su última visita, para disputar allí el Gran Premio de Baréin, que se mudó de su fecha habitual por el conflicto en Oriente Medio. El fin de semana arrancó con Fernando Alonso como protagonista del paddock: el bicampeón mundial anunció el martes 29 de septiembre <b>su renovación con Aston Martin para 2027</b>, lo que será <b>su vigésimocuarta temporada en la categoría, a los 45 años</b>, y reeditará la dupla con Lance Stroll. En la rueda de prensa previa en Sepang dijo que no tiene garantías de que 2027 sea más divertido pero que sigue motivado, y que mientras tenga ese fuego dentro no es momento de parar; Marca incluso lo interpretó como una pista de continuidad hasta 2028. El circuito lo favorece: allí consiguió su primera pole y su primer podio en 2003 y <b>ganó tres veces, en 2005, 2007 y 2012</b>, más que nadie de la parrilla actual.", "El otro foco del fin de semana es la relación entre el campeón Lando Norris y Franco Colapinto después de su accidente en Bakú: Norris llegó a pedir al menos una carrera de suspensión para el argentino, terminó reconociendo que se pasó y ofreció disculpas, mientras Colapinto calificó el episodio de gran error y se disculparó con Pierre Gasly y con el británico. <b>Colapinto largará con cinco puestos de penalización</b> y la carrera se corre el domingo 4 de octubre."],
+        clave: "El GP de Baréin corre en Sepang tras casi una década · Alonso renueva con Aston Martin para 2027 · Colapinto, con cinco puestos de penalización · carrera el domingo 4",
+                img: "img/06-f1-sepang-alonso.jpg",
+        fuentes: [
+          { t: "France 24", url: "https://www.france24.com/es/minuto-a-minuto/20261001/la-f1-vuelve-a-malasia-para-un-gran-premio-de-bar%C3%A9in-deslocalizado" },
+          { t: "AS (Sepang)", url: "https://as.com/motor/formula_1/alonso-senala-el-camino-f202610-n/" },
+          { t: "Diario de Navarra", url: "https://www.diariodenavarra.es/noticias/deportes/deportes-motor/2026/10/01/fernando-alonso-renovar-aston-martin-2027-aun-siento-ese-fuego-837276-43.html" },
+          { t: "Norris y Colapinto", url: "https://www.audacy.com/winsnoticias/noticias/lando-norris-franco-colapinto-f1-azerbaiyan-c76791b8386568d1a05a74cf5575d155" }
+        ]
+      },
+      {
+        num: 3, region: "deporte", fecha: "1 al 4 de octubre de 2026",
+        titulo: "El WRC se decide en Cerdeña: Evans, Pajari y Solberg juegan el título en una sola prueba",
+        texto: ["El Campeonato Mundial de Rally se define este fin de semana en el Rally Italia Sardegna, con sede en Alghero, 307 kilómetros cronometrados y 17 pruebas especiales de tierra. La ronda, la decimotercera y última de la temporada, quedó como única definidora después de que la FIA y WRC Promoter cancelaran el Rally Saudi Arabia del 12 al 15 de noviembre por la situación en la región, una decisión que <b>recortó de 70 a 35 los puntos en disputa</b> y concentró toda la pelea en un solo fin de semana.", "Elfyn Evans, quíctuple subcampeón en los últimos seis años, <b>llega liderando con 17 puntos de ventaja</b> sobre su compañero de Toyota Sami Pajari y 21 sobre Oliver Solberg: <b>una tercera victoria de temporada le daría el título</b>, y con 19 puntos ya sería el tercer campeón británico de la historia, después de Colin McRae y Richard Burns. La jornada de apertura del jueves confirmó la pelea a tres. En los duelos de 2,21 kilómetros de la Ittiri Arena, Evans le ganó por 0,4 segundos a Pajari pero fue tercero, a 1,1 de Solberg, que además marcó el mejor tiempo del shakedown.", "Toyota ya se consagró campeón de constructores en Chile, <b>su sexto título consecutivo y décimo en total</b>, y este será el último rally con el GR Yaris Rally1 antes de las nuevas reglas de 2027."],
+        clave: "Evans lidera por 17 puntos sobre Pajari y 21 sobre Solberg · Saudi Arabia cancelado, todo se define en Alghero · 307 km y 17 pruebas · Toyota, campeón de constructores",
+                img: "img/07-wrc-sardinia.jpg",
+        fuentes: [
+          { t: "BBC Sport", url: "https://www.bbc.com/sport/motorsport/articles/cqn747dr4gvjo" },
+          { t: "Rally Italia Sardegna (oficial)", url: "https://rallyitaliasardegna.com/2026/09/17/rally-italia-sardegna-to-host-the-final-round-of-the-2026-fia-wrc?lang=en" },
+          { t: "WRC (cancelación)", url: "https://www.wrc.com/en/news/fia-and-wrc-promoter-confirm-final-round-of-the-2026-wrc-season" },
+          { t: "RACER", url: "https://racer.com/2026/09/28/solberg-ready-to-put-it-all-on-the-line-in-wrc-title-showdown" }
+        ]
+      },
+      {
+        num: 4, region: "global", fecha: "2 de octubre de 2026",
+        titulo: "Volvo Cars tiró a la basura su pronóstico 2026 de volumen y flujo de caja por la caída en China y la lenta recuperación en EE.UU.",
+        texto: ["Volvo Cars comunicó este viernes 2 de octubre a primera hora (08:35 CET) que <b>no cumplirá las previsiones de volumen de ventas y de flujo de caja de efectivo de todo 2026</b> y que, ante una situación de mercado cada vez más difícil, tampoco publicará nuevas estimaciones a corto plazo por el aumento de la incertidumbre. La compañía atribuye el desvío al empeoramiento del mercado en China y a una recuperación más lenta de lo esperado en Estados Unidos, mientras Europa se mantiene resistente. Según el fabricante sueco, estos desarrollos también tendrán un impacto negativo significativo en las utilidades y el flujo de caja del tercer trimestre, por encima de los vientos en contra ya comunicados en materias primas, tipo de cambio y mayor amortización.", "En el mercado, <b>las acciones cayeron hasta un 7,8% en Estocolmo</b>, la mayor caída intradía desde julio, cuando la compañía abandonó su meta de vender más autos este año por la debilidad china. El aviso llega junto a las ventas del tercer trimestre, un 10,7% por debajo del año anterior, también por China y Estados Unidos, y con el plan de giro de 18.000 millones de coronas suecas en plena ejecución: <b>la reducción de 3.000 puestos globales avanza</b>, con unos 1.100 empleados ya desvinculados."],
+        clave: "Objetivo 2026 de volumen y flujo de caja descartado · China empeora, EE.UU. lenta, Europa resistente · golpe también en el 3T · acciones hasta −7,8% · ventas del trimestre −10,7%",
+                img: "img/08-volvo.jpg",
+        fuentes: [
+          { t: "Volvo Cars (comunicado oficial)", url: "https://news.cision.com/volvo-car-ab--publ-/r/volvo-cars-removes-forward-looking-statement-on-volume-and-cash-flow,c4403844" },
+          { t: "Bloomberg", url: "https://www.bloomberg.com/news/articles/2026-10-02/volvo-car-scraps-outlook-as-china-us-weakness-curb-earnings" },
+          { t: "The Edge Malaysia", url: "https://theedgemalaysia.com/node/820333" },
+          { t: "Investing.com (ventas del 3T)", url: "https://www.investing.com/news/stock-market-news/volvo-cars-falls-as-q3-sales-slump-11-on-china-us-weakness-4929070" }
+        ]
+      },
+      {
+        num: 5, region: "global", fecha: "2 de octubre de 2026",
+        titulo: "Nidec busca vender su negocio de motores eléctricos automotrices tras el escándalo contable",
+        texto: ["Automotive News informó el 2 de octubre que Nidec, uno de los mayores proveedores mundiales de motores eléctricos para automóviles, <b>busca desprenderse de su unidad de motores eléctricos automotrices</b>, en un contexto marcado por un escándalo contable que puede tener consecuencias en sus clientes más importantes: <b>Stellantis, BMW y Volkswagen</b>. En Francia, Nidec tiene con Stellantis la empresa conjunta eMotors, 50% del fabricante y 50% de Nidec-Leroy Somer, que fabrica motores, invertidores y reductores para los vehículos eléctricos de Stellantis; la alianza nació en 2017 bajo la estrategia de integración vertical del ex CEO Carlos Tavares, y Stellantis no respondió de inmediato si un desmembramiento en Nidec afectaría el proyecto. La empresa también suministra motores a Volkswagen Group y a BMW.", "La venta es la última etapa de un repliegue que empezó en mayo, cuando Nidec anunció su retirada del negocio de ejes eléctricos (e-axle): negoció la disolución de su joint venture con GAC en China y evaluó lo mismo con la europea. El e-axle fue <b>el proyecto insignia del fundador Shigenobu Nagamori</b> y concentró la mayor parte de la sobreestimación de utilidades del escándalo contable, así que la compañía ahora avanza en una reordenación general de su negocio."],
+        clave: "Venta de la unidad de motores automotrices · JV eMotors con Stellantis en Francia (50/50) · clientes: Stellantis, VW y BMW · escándalo contable y salida del e-axle desde mayo",
+                img: "img/09-nidec.jpg",
+        fuentes: [
+          { t: "Automotive News", url: "https://www.autonews.com/manufacturing/suppliers/ane-stellantis-nidec-1002/" },
+          { t: "electrive", url: "https://www.electrive.com/2026/05/18/nidec-to-withdraw-from-e-axle-business/" },
+          { t: "Nikkei Asia", url: "https://asia.nikkei.com/business/automobiles/electric-vehicles/japan-s-nidec-to-end-china-jv-as-it-scales-back-ev-drive-parts" }
+        ]
+      }
+    ]
+  },
+  {
+    fecha: "2026-10-01",
+    titulo: "Jueves 1 de octubre de 2026",
+    notas: [
+      {
+        num: 1, region: "global", fecha: "1 de octubre de 2026",
+        titulo: "Los Detroit Three pierden terreno ante los asiáticos y GM defiende el liderazgo con Toyota pisándole los talones",
+        texto: ["Cuando General Motors, Ford y Stellantis informen sus ventas del tercer trimestre en Estados Unidos, el grupo podría quedar en torno al 36% de cuota de mercado combinada, <b>el nivel más bajo de su historia</b>, según Cox Automotive. En paralelo, las marcas asiáticas con fuerte presencia de híbridos, encabezadas por Toyota y Honda, <b>deberían superar juntas el 50% de las ventas nuevas del período</b>, por segundo trimestre consecutivo. El motor del cambio son los precios de la nafta, disparados por la guerra entre Estados Unidos e Irán, que empujan a los compradores hacia los híbridos y los vehículos más eficientes, justo el terreno donde Asia es más fuerte.", "GM se mantiene como el mayor vendedor del país pese a una baja de ventas cercana al 5%, y Toyota le recorta: con 633.223 unidades vendidas, apenas 0,6% por encima del año anterior, el fabricante japonés cerró el trimestre con los electrificados, híbridos incluidos, <b>alcanzando el 57% de sus ventas</b>, con 363.367 unidades y un avance del 28,5%. La debilidad estructural de GM quedó a la vista: pese a ofrecer una gama eléctrica amplia, tiene un solo híbrido en catálogo, el Corvette, y <b>sus ventas de eléctricos cayeron un 62% interanual</b>."],
+        clave: "Cuota combinada de los Detroit Three en torno al 36%, un récord bajo · marcas asiáticas por encima del 50% · Toyota, 57% de ventas electrificadas · GM, un solo híbrido en gama",
+                img: "img/10-detroit-three.jpg",
+        fuentes: [
+          { t: "Reuters", url: "https://www.reuters.com/business/autos-transportation/detroit-three-automakers-set-lose-market-share-asian-rivals-2026-10-01" },
+          { t: "CNBC", url: "https://www.cnbc.com/2026/10/01/us-auto-sales-q3.html" },
+          { t: "CBT News (previsión Cox)", url: "https://www.cbtnews.com/gm-ford-share-losses/" }
+        ]
+      },
+      {
+        num: 2, region: "global", fecha: "1 de octubre de 2026",
+        titulo: "BMW confirmó su eléctrico de entrada para 2028: un i1 de plataforma Neue Klasse pensado para Europa",
+        texto: ["En su Capital Markets Day 2026, BMW confirmó la que será su apuesta más accesible en el mundo eléctrico: <b>un compacto cien por ciento eléctrico de entrada, basado en la plataforma Neue Klasse y previsto para 2028</b>. La marca no anunció el nombre oficial, pero <b>la prensa especializada lo da por llamado i1</b>, un cinco puertas que se posicionaría debajo del iX3 y del i3 y que probablemente sea el modelo Neue Klasse más barato de la gama, con la intención de bajar la nueva tecnología desde los autos caros hacia el mercado masivo para mejorar la rentabilidad.", "El anuncio se da en un contexto en el que BMW adelantó que presentará el eléctrico iX4 antes de que termine este año y que el compacto llegaría dos años después. Su foco sería Europa y no está confirmada su venta en Estados Unidos.", "A diferencia del Series 1 de combustión, que continúa sobre la plataforma delantera UKL2, el eléctrico usaría la <b>arquitectura Gen6 trasera de 800 voltios</b> con baterías de sexta generación, la misma del i3, con versiones de tracción trasera y eventual tracción integral. Con Audi preparando un A2 eléctrico y Mercedes pensando en su propio compacto, BMW busca responder en el segmento que amortigua la entrada a la marca."],
+        clave: "Eléctrico de entrada para 2028 sobre Neue Klasse · probable nombre i1, cinco puertas · foco en Europa · Gen6 trasera de 800 V · iX4, antes de fin de año",
+                img: "img/11-bmw-i1.jpg",
+        fuentes: [
+          { t: "InsideEVs", url: "https://insideevs.com/news/810456/bmw-i1-neue-classe-affordable-ev/" },
+          { t: "electrive", url: "https://www.electrive.com/2026/10/01/bmw-plans-new-entry-level-electric-vehicle-for-2028" },
+          { t: "BMW Blog", url: "https://www.bmwblog.com/2026/09/30/bmw-confirms-entry-level-ev-europe-2028" },
+          { t: "DigitalToday", url: "https://www.digitaltoday.co.kr/en/view/110206/bmw-to-launch-lower-priced-entry-level-ev-for-europe-in-2028" }
+        ]
+      },
+      {
+        num: 3, region: "deporte", fecha: "1 de octubre de 2026",
+        titulo: "Ford vuelve al Mundial de rally: anunció su regreso al WRC como equipo de fábrica desde 2028",
+        texto: ["Ford Racing confirmó el 1 de octubre, desde Dearborn, que <b>volverá al Campeonato Mundial de Rally como programa completo de fábrica a partir de 2028</b>, junto a su socio histórico M-Sport, y que construirá un auto nuevo para debutar en la temporada 2029 bajo las nuevas reglas técnicas WRC27. Es el fin de su ausencia como equipo de fábrica: <b>será su primer programa integral desde 2012</b> y el cuarto fabricante comprometido con las WRC27, reglas diseñadas para bajar costos y sumar constructores.", "La noticia llega presentada por la FIA como un fruto del \"deal of the century\", el acuerdo entre el ente rector y WRC Promoter, y Ford planea usar el programa como laboratorio: <b>las lecciones del rally alimentarán su próxima gama europea de autos eléctricos e híbridos</b>. \"Estamos encantados de dar la bienvenida a Ford como equipo de fábrica y esperamos con entusiasmo este nuevo capítulo juntos\", dijo Eric Boullier, CEO de WRC Promoter, y la marca subrayó sus 50 años de historia en los rallies.", "Para el Mundial, que este fin de semana define su título en Cerdeña, el regreso de Ford significa más presencia en Estados Unidos y en Reino Unido y un impulso a la cantera de pilotos."],
+        clave: "Regreso como equipo de fábrica desde 2028 · con M-Sport y auto nuevo para 2029 (reglas WRC27) · cuarto constructor comprometido · laboratorio para su gama eléctrica e híbrida",
+                img: "img/12-ford-wrc.jpg",
+        fuentes: [
+          { t: "FIA", url: "https://www.fia.com/news/deal-century-paying-dividends-fia-world-rally-championship-ford-racing-confirms-its-return-2028" },
+          { t: "DirtFish", url: "https://dirtfish.com/rally/wrc/ford-returns-to-the-wrc-as-a-manufacturer" },
+          { t: "Ford (comunicado oficial)", url: "https://www.fromtheroad.ford.com/img/en/articles/2026/ford-return-fia-wrc-2028.html" },
+          { t: "RACER", url: "https://racer.com/2026/10/01/ford-to-return-to-world-rally-championship-as-full-factory-team-in-2028" }
+        ]
+      }
+    ]
+  },
+  {
+    fecha: "2026-09-30",
+    titulo: "Miércoles 30 de septiembre de 2026",
+    notas: [
+      {
+        num: 1, region: "ar", fecha: "30 de septiembre de 2026",
+        titulo: "Toyota invierte US$ 1.340 millones en Zárate y trae la primera Hilux 100% eléctrica al país",
+        texto: ["El ministro de Economía, Luis Caputo, anunció que Toyota Motor destinará <b>US$ 1.340 millones a una nueva planta en Zárate</b>, provincia de Buenos Aires, destinada a fabricar un vehículo completamente eléctrico. Es <b>la mayor inversión de la historia del sector automotor argentino</b> y la primera del país en electrificar su producción a escala industrial: hasta ahora la versión eléctrica de la Hilux se producía solamente en Tailandia. El proyecto exige generar US$ 1.280 millones de exportaciones anuales, de modo que alrededor del setenta por ciento de la producción está orientada al mercado regional, y calcula unos 3.600 empleos durante la etapa de construcción y cerca de 2.600 en operación, entre directos e indirectos.", "Toyota se convierte además en <b>la primera automotriz del mundo en incorporarse al RIGI</b>, el régimen de grandes inversiones creado por la Ley 27.742, un precedente que abre la puerta a otros fabricantes globales. Técnicamente, la Hilux eléctrica monta una batería de 59,2 kWh alojada en el chasis, dos motores eléctricos, uno por eje, tracción integral permanente y 196 CV, con una autonomía declarada cercana a 300 kilómetros en ciclo combinado.", "La primera etapa estará orientada a la minería y a aplicaciones industriales, donde los recorridos previsibles y las bases con carga propia evitan depender de la red pública de cargadores; para el consumidor masivo, la marca hará escala con la versión híbrida."],
+        clave: "US$ 1.340 M de inversión · US$ 1.280 M en exportaciones anuales · 2.600 empleos en operación · primer vehículo 100% eléctrico fabricado a escala en Argentina",
+                img: "img/13-toyota-zarate.jpg",
+        fuentes: [
+          { t: "Reuters (vía Caputo)", url: "https://ground.news/article/toyota-will-invest-us134-bi-in-factory-in-argentina" },
+          { t: "Cba24n / La Nación", url: "https://www.cba24n.com.ar/cordoba-motor/toyota-fabricara-en-zarate-la-primera-hilux-100--electrica-en-argentina_a6a77429558939baedf00c8fe" },
+          { t: "Urgente24", url: "https://urgente24.com/dinero/toyota-reordena-la-planta-zarate-armar-la-hilux-electrica-argentina-n621550" }
+        ]
+      },
+      {
+        num: 2, region: "ar", fecha: "30 de septiembre de 2026",
+        titulo: "Septiembre cerró con 49.814 patentamientos: es la sexta caída interanual, pero el mes repunta contra agosto",
+        texto: ["ACARA informó que en septiembre de 2026 se patentaron <b>49.814 vehículos 0 km</b>, contra 56.241 del mismo mes de 2025: una baja del 11,4% interanual que confirma <b>la sexta caída consecutiva del año</b> frente al mismo mes del año anterior. El acumulado de enero a septiembre llega a 435.493 unidades contra 500.497 en 2025, una contracción del 13%.", "El matiz, y la razón por la que las concesionarias empiezan a hablar de un cambio de tendencia, está en la comparación contra los meses inmediatos: después de los 43.758 de julio y los 45.003 de agosto, <b>septiembre creció cerca del 11% contra agosto</b> y encadena el segundo alza mensual del trimestre.", "El contraste del mes lo dan las dos ruedas: se patentaron 80.113 motovehículos, un 35,1% más que en septiembre de 2025, empujados por el uso laboral del reparto. Sebastián Beato, presidente de ACARA, insiste en que se trata de <b>una desaceleración y no de una crisis</b>, y la variable que decide cuánto se recupera sigue siendo el crédito, porque alrededor del 70% de las operaciones se cierran financiadas."],
+        clave: "49.814 unidades en septiembre (−11,4%) · 435.493 en nueve meses (−13%) · sexta caída interanual · 80.113 motos (+35,1%)",
+                img: "img/14-patentamientos.jpg",
+        fuentes: [
+          { t: "Ámbito", url: "https://www.ambito.com/economia/los-patentamientos-autos-0km-cayeron-114-anual-septiembre-y-sumaron-su-sexta-baja-consecutiva-n6328677" },
+          { t: "El Economista", url: "https://eleconomista.com.ar/autos/en-septiembre-crecieron-patentamientos-pero-acumulan-una-caida-13-n98537" },
+          { t: "Revista Acción (ACARA)", url: "https://accion.coop/2026/10/01/las-ultimas/caen-patentamientos-de-0km/" }
+        ]
+      },
+      {
+        num: 3, region: "ar", fecha: "30 de septiembre de 2026",
+        titulo: "El Gobierno subió a US$ 35.000 el tope sin arancel de los eléctricos y habilita el arribo de Tesla",
+        texto: ["El Boletín Oficial publicó el Decreto 1128/2026, que modifica el Régimen de Importación de Vehículos Híbridos y Eléctricos y cambia los valores FOB que permiten ingresar al país con arancel cero dentro de un cupo de 50.000 unidades. Los <b>autos eléctricos puros pasan de un tope de US$ 16.000 a US$ 35.000 por unidad</b>; los híbridos convencionales y enchufables quedan en US$ 18.000; y los mild hybrid conservan el límite de US$ 16.000. La medida alcanza las modalidades de importación CBU, SKD y CKD.", "La Secretaría de Comercio e Industria lo justificó como una adecuación a la realidad del mercado para facilitar el ingreso de tecnologías más avanzadas, pero el motivo que señala el sector es otro: el régimen anterior, con un techo único de US$ 16.000, sólo favorecía a los autos de marcas chinas y quedaba corto para los modelos de Tesla, que <b>ya comunicó que abrirá su primer local en Argentina durante octubre</b>.", "El contexto explica el apuro oficial: los híbridos y los eléctricos pasaron <b>del 4,4% del mercado en los primeros siete meses de 2025 al 21,1% en el mismo período de 2026</b>, con 48.320 unidades patentadas y <b>un crecimiento del 322%</b>, y el 72% de esas unidades correspondía a modelos alcanzados por el régimen de arancel cero."],
+        clave: "Eléctricos puros hasta US$ 35.000 FOB, contra US$ 16.000 antes · híbridos a US$ 18.000 · cupo de 50.000 unidades · 21,1% de cuota electrificada en siete meses",
+                img: "img/15-tope-arancel.jpg",
+        fuentes: [
+          { t: "iProfesional", url: "https://www.iprofesional.com/autos/465561-gobierno-flexibilizo-la-importacion-de-autos-sin-arancel-y-llegaran-mas-modelos" },
+          { t: "lu17", url: "https://lu17.com/contenido/150628/elevan-a-us-35-000-el-valor-tope-para-importar-autos-electricos-e-hibridos-sin-arancel" },
+          { t: "El Litoral", url: "https://www.ellitoral.com/economia/vehiculoselectricos-mildhybrid-boletinoficial-arancelcero-vehiculoshibridos-decreto11282026-sectorautomotor-arancelextrazona-patentamientos-motorizacionalternativa-gobiernonacional-valoresfob-mercadoargentino-movilidadalternativa-vehiculoselectrificados-importaciondevehiculos_0_wKgye5fHyd.html" },
+          { t: "Trámite oficial del cupo", url: "https://www.argentina.gob.ar/servicio/solicitar-cupo-para-la-importacion-de-vehiculos-hibridos-electricos-y-celdas-de-combustible" }
+        ]
+      },
+      {
+        num: 4, region: "global", fecha: "30 de septiembre de 2026",
+        titulo: "BMW estrenó generación del Serie 3 con el i3 eléctrico de hasta 912 kilómetros de autonomía",
+        texto: ["BMW presentó <b>la octava generación del Serie 3</b>, el sedán premium más vendido del mundo, y lo hizo sin apostar por una sola tecnología: la gama combina motores de combustión con híbrido ligero de 48 voltios y una variante totalmente eléctrica, el BMW i3, desarrollada bajo la filosofía Neue Klasse. El i3 usa la sexta generación de la tecnología eDrive, con arquitectura eléctrica de 800 voltios, baterías de nueva generación, motores más eficientes y capacidad de carga bidireccional.", "La versión de tope, el i3 50 xDrive, tiene dos motores, tracción integral, 469 CV, acelera de 0 a 100 km/h en 4,7 segundos y con su batería de 108,7 kWh <b>recorre hasta 912 kilómetros en el ciclo WLTP</b>, con carga de hasta 400 kW: <b>diez minutos en un cargador rápido suman hasta 423 kilómetros</b>. Debajo, el i3 40 xDrive ofrece 374 CV, una batería de 82,8 kWh y hasta 710 kilómetros, y para 2027 está previsto un i3 M60 xDrive M Performance.", "En el interior aparece el BMW Panoramic iDrive, con pantalla central de 17,9 pulgadas, Head-Up Display 3D y Panoramic Vision. La producción del i3 arrancó en Múnich en agosto, planta que a partir de 2027 fabricará exclusivamente vehículos eléctricos, mientras las versiones de combustión se hacen en Dingolfing. La novedad dinámica es <b>el Drift Moment</b>, una función que envía la potencia al eje trasero para facilitar el deslizamiento controlado."],
+        clave: "i3 50 xDrive: 469 CV y 912 km WLTP · 800 voltios y carga de 400 kW, con 423 km en diez minutos · octava generación del Serie 3 · Múnich pasa a 100% eléctrica en 2027",
+                img: "img/16-bmw-serie3.jpg",
+        fuentes: [
+          { t: "Autocosmos", url: "https://noticias.autocosmos.com.ar/2026/09/30/bmw-serie-3-estrena-nueva-generacion" },
+          { t: "BMW Group PressClub", url: "https://www.press.bmwgroup.com/latin-america-caribbean/article/detail/T0459978ES/bmw-group-planta-m%C3%BAnich-inicia-la-producci%C3%B3n-en-serie-del-totalmente-nuevo-bmw-i3?language=es" },
+          { t: "Motor.es", url: "https://www.motor.es/noticias/bmw-serie-3-2027-gama-lanzamiento-espana-2026116727.html" }
+        ]
+      }
+    ]
+  },
+  {
+    fecha: "2026-09-29",
+    titulo: "Martes 29 de septiembre de 2026",
+    notas: [
+      {
+        num: 1, region: "global", fecha: "29 de septiembre de 2026",
+        titulo: "El CEO de Ford: para Europa ya es tarde frente a los fabricantes chinos, para Estados Unidos todavía no",
+        texto: ["Jim Farley, CEO de Ford, utilizó el Automotive News Congress de Detroit para lanzar una advertencia que es a la vez diagnóstico y estrategia: <b>para Europa ya es tarde contener el avance de los fabricantes chinos</b>, pero Estados Unidos todavía tiene tiempo de decidir con calma. En palabras suyas, es importante tomarse el tiempo para ser cautos, observar lo que pasa en Europa, donde no fue así, y advertir que allí ya es tarde.", "Los números respaldan su lectura: las marcas chinas pasaron de un peso prácticamente nulo en Europa en 2020 <b>al 12% en agosto de 2026 según Dataforce</b>, su cuota global creció cerca del 70% entre 2020 y 2025 según GlobalData, y JATO proyecta <b>más de 1,3 millones de matriculaciones europeas para 2026</b> contra poco más de 50.000 en 2020.", "La respuesta de Ford es de doble vía: asociarse con empresas chinas donde no tiene propiedad intelectual o donde conviene ser más eficiente en capital, como en la joint venture con Geely en Valencia, donde Geely tiene el 34% y construirá dos de los cuatro modelos eléctricos desde 2028, o con CATL en Michigan; y competirles en directo con su vehículo eléctrico universal que llegará el año próximo con una versión pick-up. Farley argumentó también por seguridad nacional: estos autos se manejan solos, pueden filmar todo, y encontrar el equilibrio adecuado es fundamental. Estados Unidos mantiene <b>aranceles superiores al 100% sobre los autos chinos</b> y una prohibición sobre su software."],
+        clave: "Cuota china en Europa, de casi 0 en 2020 al 12% en agosto de 2026 · joint venture Ford-Geely en Valencia, dos eléctricos desde 2028 · aranceles de EE.UU. sobre China por encima del 100%",
+                img: "img/17-ford-farley.jpg",
+        fuentes: [
+          { t: "CNBC", url: "https://www.cnbc.com/2026/09/29/ford-ceo-jim-farley-china-automakers.html" },
+          { t: "Reuters (vía Euronext)", url: "https://live.euronext.com/en/financial-news/fords-ceo-urges-caution-chinese-automakers-says-europe-too-late" },
+          { t: "The Next Web", url: "https://thenextweb.com/news/ford-farley-europe-too-late-geely" }
+        ]
+      },
+      {
+        num: 2, region: "global", fecha: "29 de septiembre de 2026",
+        titulo: "Stellantis para cuatro plantas francesas en octubre: no le faltan pedidos, le faltan baterías de larga autonomía",
+        texto: ["Stellantis anunció el martes 29 de septiembre a los representantes del personal que suspenderá la producción <b>entre cinco y quince días en octubre</b> en cuatro de sus plantas francesas: Sochaux, Rennes, Mulhouse y Poissy. En dos de los casos el motivo no es la falta de demanda, sino lo contrario. Sochaux, que fabrica los Peugeot 3008 y 5008, se detiene del 23 al 30 de octubre, y Rennes, que arma el Citroën C5 Aircross, del 22 al 30; ambas por <b>disponibilidad insuficiente de baterías</b> destinadas a las versiones de larga autonomía de sus eléctricos, porque la demanda, especialmente del canal profesional, supera la capacidad de suministro de ACC, la empresa conjunta de Stellantis, Mercedes-Benz y TotalEnergies.", "<b>Mulhouse tiene el paro más largo, del 15 al 30 de octubre</b>, con reducción de equipos desde noviembre, porque los Peugeot 308 y 408 que produce están al final de su ciclo y no admiten esas baterías de alta capacidad; la planta recibirá 400 millones de euros de un paquete de inversión de 1.000 millones anunciado en junio y desde 2029 montará tres modelos nuevos. Poissy se detiene del 19 al 23 por gestión fina de stock.", "En Mulhouse la CGT pidió bajar las cadencias antes que cerrar, y en Rennes la CFDT advirtió sobre el impacto en el poder adquisitivo de los trabajadores en un contexto de combustibles caros, un tema que su delegado calificó de explosivo."],
+        clave: "Sochaux del 23 al 30, Rennes del 22 al 30, Mulhouse del 15 al 30 y Poissy del 19 al 23 de octubre · escasez de baterías long range de ACC · Mulhouse pierde los 308 y 408",
+                img: "img/18-stellantis-francia.jpg",
+        fuentes: [
+          { t: "Euronews", url: "https://www.euronews.com/2026/09/29/stellantis-to-halt-four-french-plants-for-several-days-over-supply-shortage" },
+          { t: "just-auto (vía Bloomberg)", url: "https://www.just-auto.com/news/stellantis-halt-output-four-french-plants" },
+          { t: "actu.fr", url: "https://actu.fr/economie/ca-pourrait-devenir-explosif-stellantis-va-mettre-plusieurs-usines-francaises-a-l-arret-en-octobre_64856907.html" }
+        ]
+      },
+      {
+        num: 3, region: "global", fecha: "29 y 30 de septiembre de 2026",
+        titulo: "Fiat mostró las primeras imágenes del Argo X, el SUV chico que se fabricará en Betim y convivirá con el Argo actual",
+        texto: ["Stellantis Brasil reveló el 29 de septiembre las primeras imágenes oficiales d<b>el Fiat Argo X</b>, el nuevo modelo subcompacto que la marca lanzará en Brasil antes de que termine 2026 y que inaugurará la estrategia de producto faSTLAne para el mercado brasileño. No es la evolución del Argo que se vende hoy: <b>es una versión regional del Grande Panda europeo</b>, con luces cuadradas y alargadas y una X en amarillo neón en el logotipo, que usará <b>la plataforma Smart Car de Stellantis</b>, la misma de los Citroën C3 y Basalt.", "Se fabricará en el complejo de Betim, en Minas Gerais, dentro del plan de inversiones de 32.000 millones de reales que Stellantis tiene hasta 2030 para Sudamérica, de los cuales 14.000 millones van a esa planta, y será el primer modelo completamente nuevo asignado a Betim bajo ese programa.", "La convivencia entre ambos modelos es deliberada: el Argo actual sigue siendo el auto de entrada de la gama y se mantiene a la venta, también en Argentina, mientras el Argo X se ubica un escalón por encima con foco en seguridad. Se esperan dos mecánicas de tres cilindros y un litro, el Firefly de 71 CV con manual de cinco velocidades y <b>el T200 turbo de 116 CV</b> con caja CVT, además de seis airbags y un paquete de asistencia con frenado de emergencia automático, mantenimiento de carril y luces altas automáticas."],
+        clave: "Primeras imágenes el 29 de septiembre · versión regional del Grande Panda sobre la plataforma Smart Car · producción en Betim · convive con el Argo actual, que sigue a la venta",
+                img: "img/19-fiat-argo.jpg",
+        fuentes: [
+          { t: "Autocosmos", url: "https://noticias.autocosmos.com.ar/2026/09/30/estas-son-las-primeras-imagenes-oficales-del-fiat-argo-x" },
+          { t: "ClubAlfa", url: "https://www.clubalfa.it/en/fiat-argo-x-revealed-in-first-images-as-a-new-brazilian-icon-makes-its-debut-45476" },
+          { t: "Carscoops", url: "https://www.carscoops.com/2026/10/fiat-argo-x-teaser" },
+          { t: "MarkLines", url: "https://www.marklines.com/en/news/351683" }
+        ]
+      }
+    ]
+  },
+  {
+    fecha: "anteriores",
+    titulo: "Anteriores · julio – 28 de septiembre de 2026",
+    notas: [
+      {
+        num: 1, region: "ar", fecha: "Septiembre de 2026",
+        titulo: "El mercado local sigue en retroceso: siete meses con una caída acumulada del 12,8%",
+        texto: ["La Asociación de Concesionarios de Automotores de la República Argentina confirma un año de meseta. En junio se patentaron 45.995 vehículos cero kilómetro, un 12,8% menos interanual, aunque con un alza del 7,2% contra mayo. Julio fue el mes más duro, con <b>43.758 unidades y una caída interanual del 30,3%</b>, porque se comparó contra el segundo mejor mes de 2025. Agosto repuntó levemente a 44.415 unidades, pero quedó 19,1% por debajo del mismo mes del año anterior.", "El acumulado de los primeros siete meses alcanza 339.359 unidades frente a 388.680 de 2025. La estructura del mercado cambió más que el volumen: <b>los importados representan hoy cerca del 69% de los patentamientos</b> y los nacionales sólo el 31%, cuando antes de la apertura de importaciones la producción local había llegado al 65%. Las concesionarias arrastran <b>unos 130.000 autos de stock sin vender</b> y el financiamiento es la variable decisiva, porque alrededor del 70% de las operaciones se cierran con crédito.", "Sebastián Beato, de ACARA, prefiere hablar de desaceleración y no de crisis, mientras ADEFA proyecta un cierre de 2026 entre 550.000 y 575.000 unidades, con la expectativa de un rebote fuerte en 2027. En el ranking, la Toyota Hilux de Zárate conserva el primer lugar general y el Fiat Cronos de Córdoba lidera los autos de pasajeros, en tanto que el Ford Territory, importado de China y fabricado por JMC, se convirtió en <b>el importado más vendido del país</b> por primera vez desde la existencia del Mercosur."],
+        clave: "1er semestre: 294.181 unidades (−9,9%) · 7 meses: 339.359 (−12,8%) · 69% importado contra 31% nacional · proyección de 550.000 a 575.000 para 2026",
+                img: "img/20-mercado-retroceso.jpg",
+        fuentes: [
+          { t: "Infobae", url: "https://www.infobae.com/economia/2026/08/01/las-ventas-de-autos-0-km-volvieron-a-caer-en-julio-y-se-desplomaron-30-en-el-ultimo-ano" },
+          { t: "La Nación", url: "https://www.lanacion.com.ar/autos/los-patentamientos-volvieron-a-caer-en-agosto-y-estos-fueron-los-10-autos-mas-vendidos-nid31082026" },
+          { t: "La Voz (ACARA y ADEFA)", url: "https://www.lavoz.com.ar/negocios/mercado-automotor-0-km-terminaran-2026-baja-sector-apuesta-recuperacion-2027_0_D5zC2S4H8Z.html" },
+          { t: "Agencia NA", url: "https://noticiasargentinas.com/economia/movilidad/-los-patentamientos-de-autos-0km-cayeron-12-8--en-junio-y-los-importados-ya-representan-siete-de-cada-10-ventas_a6a44e377fd88dacfc5207f36" }
+        ]
+      },
+      {
+        num: 2, region: "ar", fecha: "10 de septiembre de 2026",
+        titulo: "Renault presentó en Buenos Aires la Niagara, la primera pickup compacta fabricada en la Argentina",
+        texto: ["La presentación mundial de la Renault Niagara ocurrió en Buenos Aires el 10 de septiembre, <b>un hecho sin precedentes en el país</b>, donde nunca se presentó por primera vez un modelo de una marca global. La camioneta se fabrica en <b>la planta Santa Isabel de Córdoba</b>, apunta al mercado local y a Brasil, y se posiciona en el segmento de pick-ups medianas junto a la Ford Ranger, la Toyota Hilux, la Chevrolet S10 y la Volkswagen Amarok.", "Fabrice Cambolive, CEO de Renault Brand y Chief Growth Officer del grupo, explicó que es el primer pilar del plan futuREady, que prevé lanzar 14 modelos nuevos fuera de Europa hasta 2030, llegar al cincuenta por ciento de las ventas en esos mercados y que la mitad de ellas sean híbridos o eléctricas. Pablo Sibilla, director de Renault Argentina, destacó que el modelo se produjo en Córdoba y que acumula <b>50.000 horas y 800.000 kilómetros de ensayos</b> en condiciones extremas en Argentina, Brasil, Colombia y Europa, para validar seguridad, corrosión, confort térmico bajo cero y desempeño todoterreno.", "Un detalle técnico que la distingue de la competencia es que la Niagara utiliza <b>estructura monocasco en lugar del chasis de escalera</b> típico de las camionetas, toma como base conceptual al Renault Duster y comparte elementos de diseño con el Boreal. En el mismo acto, el CEO global pidió defender a la industria local y solicitó una política especial para los autos que se fabrican en Argentina."],
+        clave: "Planta Santa Isabel, en Córdoba · 800.000 km de ensayos · 14 modelos fuera de Europa hasta 2030 · estructura monocasco en lugar de chasis de escalera",
+                img: "img/21-renault-niagara.jpg",
+        fuentes: [
+          { t: "La Nación", url: "https://www.lanacion.com.ar/autos/renault-lanzo-la-niagara-su-nueva-pickup-producida-en-la-argentina-todos-los-detalles-nid10092026" },
+          { t: "Renault Media", url: "https://media.renault.com/renault-niagara-the-name-of-the-new-robust-versatile-pick-up-designed-for-latin-america?lang=eng" },
+          { t: "Automotive World", url: "https://www.automotiveworld.com/news/renault-names-new-latin-america-pick-up-niagara" },
+          { t: "El Economista", url: "https://eleconomista.com.ar/autos/la-nueva-pick-up-argentina-ya-tiene-fecha-lanzamiento-cuando-llega-n96709" }
+        ]
+      },
+      {
+        num: 3, region: "deporte", fecha: "27 de agosto al 29 de septiembre de 2026",
+        titulo: "Colapinto confirmado en Alpine para 2027 y con un final de temporada accidentado en Azerbaiyán",
+        texto: ["Alpine oficializó el jueves 27 de agosto que <b>Franco Colapinto sigue en el equipo para 2027</b>, en un video con Flavio Briatore y Pierre Gasly en el que el ejecutivo le regala un retrato. El argentino viene cerrando su primera temporada completa en la categoría con <b>19 puntos en doce Grandes Premios</b>, tras lograr su mejor resultado en Miami, donde el séptimo puesto le dio su mejor posición desde el debut, y un remontaje en Spa que lo llevó al décimo puesto y en el que superó a Gasly y a Lawson en la misma maniobra. También registró su mejor posición de largada en la sesión de clasificación de Monza. El cierre, sin embargo, fue duro.", "En el Gran Premio de Azerbaiyán, en Bakú, el incidente que protagonizó con su propio compañero Gasly y con Lando Norris de McLaren terminó con el retiro de los tres y le costó <b>una penalización de cinco puestos en la grilla</b> para el Gran Premio de Malasia en Sepang, circuito al que la categoría vuelve después de nueve años. Gasly puso como condición pública para sostener la buena relación con su compañero el respeto.", "En la clasificación de Bakú, George Russell tomó la pole con 1:42.526, apenas 0.837 segundos por delante de Charles Leclerc, mientras que el líder del campeonato, Kimi Antonelli, quedó eliminado en la primera ronda tras un incidente en pista. Al cierre de la primera mitad de la temporada, <b>Colapinto ocupa el décimo puesto del campeonato</b>."],
+        clave: "19 puntos en 12 Grandes Premios · mejor resultado: séptimo en Miami · cinco puestos de penalización en Sepang · décimo en la tabla general",
+                img: "img/22-colapinto-alpine.jpg",
+        fuentes: [
+          { t: "Buenos Aires Herald", url: "https://buenosairesherald.com/sports/franco-colapinto/franco-colapinto-confirmed-as-alpine-f1-driver-for-2027" },
+          { t: "LT10", url: "https://www.lt10.com.ar/noticia/509707--colapinto-palpita-su-primera-experiencia-en-sepang-tras-el-golpe-en-baku&seccion=automovilismo" },
+          { t: "Agencia NA", url: "https://noticiasargentinas.com/deportes/la-condicion-que-puso-pierre-gasly-para-mantener-una-buena-relacion-con-franco-colapinto_a6abb18e0b62936833e7d47c2" },
+          { t: "La Nación", url: "https://www.lanacion.com.ar/deportes/automovilismo/como-le-fue-a-franco-colapinto-en-el-gp-de-austria-de-la-formula-1-2026-nid28062026" }
+        ]
+      },
+      {
+        num: 4, region: "global", fecha: "3 y 4 de septiembre de 2026",
+        titulo: "Tesla lanzó el Cybercab en Austin y la NHTSA le abrió una auditoría de seguridad al día siguiente",
+        texto: ["El 3 de septiembre Tesla comenzó el despliegue comercial del Cybercab en Austin, Texas, con <b>un lote inicial de unos 45 vehículos</b>. Es el primer producto de la compañía construido desde cero sin posibilidad de retorno a un conductor humano: <b>dos plazas, sin volante, sin pedales de aceleración ni de freno y sin espejos retrovisores</b>, y depende por completo del software de conducción autónoma.", "Horas después, la National Highway Traffic Safety Administration anunció la apertura de un Audit Query, <b>el expediente AQ26002</b>, sobre una población estimada de 1.000 vehículos. La agencia quiere examinar el proceso y los datos técnicos en los que Tesla se basan para autocertificar que el Cybercab cumple con todas las normas federales de seguridad, y agregó que evaluará hasta qué punto esa certificación dependió de considerar que ciertas reglas no aplican a un vehículo sin controles manuales. La autoridad le fijó un plazo para responder antes del 30 de septiembre. El conflicto regulatorio es real: la normativa estadounidense vigente todavía exige controles manuales, y el Departamento de Transporte propuso eliminarlos para vehículos autónomos, pero el cambio no está en vigor.", "El precedente más cercano es Zoox, filial de Amazon, que consiguió una exención temporal de ocho normas de seguridad en julio de 2026 y ya opera viajes de pago en Las Vegas, con permiso para sumar hasta 2.500 vehículos por año durante los dos años siguientes. La auditoría no frena el despliegue de Tesla, pero <b>condiciona cualquier expansión fuera de Austin</b>."],
+        clave: "Expediente NHTSA AQ26002 · cerca de 1.000 vehículos · sin volante ni pedales · Zoox ya opera un robotaxi equivalente en Las Vegas",
+                img: "img/23-tesla-cybercab.jpg",
+        fuentes: [
+          { t: "NHTSA (comunicado oficial)", url: "https://www.nhtsa.gov/press-releases/investigation-tesla-cybercab-self-certification" },
+          { t: "Documento del expediente (PDF)", url: "https://static.nhtsa.gov/odi/inv/2026/INOA-AQ26002-17078.pdf" },
+          { t: "Teslarati", url: "https://www.teslarati.com/tesla-cybercab-launch-nhtsa-attention-know-more" }
+        ]
+      },
+      {
+        num: 5, region: "global", fecha: "9 de julio al 4 de septiembre de 2026",
+        titulo: "Volkswagen se prepara para la mayor reestructuración de su historia: hasta 100.000 empleos",
+        texto: ["El mayor fabricante de Europa evalúa cerrar cuatro plantas alemanas, en Hanóver, Emden, Zwickau y la de Audi en Neckarsulm, y elevar los recortes de empleo <b>hasta 100.000 personas</b>, el doble de los 50.000 ya acordados con el sindicato IG Metall. En términos absolutos sería <b>la reestructuración más grande jamás vista en la industria automotriz</b>, comparable con la de General Motors antes de su quiebra de 2009. El consejo de supervisión aprobó reducir la gama de modelos hasta la mitad y bajar la capacidad productiva de 10 millones a 9 millones de vehículos por año, mientras se proyecta un recorte de inversión cercano al 15%, hasta unos 130.000 millones de euros en cinco años, y la separación de la marca Volkswagen y del negocio de piezas en entidades independientes.", "El origen de la crisis combina el desplome de las ventas en China, una transición hacia el eléctrico tardía, la sobrecapacidad de las plantas alemanas y los aranceles estadounidenses. <b>El beneficio operativo de 2025 cayó un 53%</b>, hasta 8.900 millones de euros, y el margen quedó en 2,8%, <b>el peor desde el Dieselgate</b>.", "El 4 de septiembre se confirmó un pacto de reestructuración y recortes de empleo, después de semanas de protestas masivas en los sitios de producción y de reuniones que los representantes de los trabajadores describieron como desastrosas. El desafío central para la dirección es romper la resistencia de IG Metall y del Estado de Baja Sajonia, segundo accionista de la compañía."],
+        clave: "Hasta 100.000 empleos en riesgo · 4 plantas alemanas · gama reducida a la mitad · capacidad de 10 a 9 millones de vehículos por año",
+                img: "img/24-vw-reestructuracion.jpg",
+        fuentes: [
+          { t: "Reuters", url: "https://www.reuters.com/business/world-at-work/volkswagen-stakeholders-meet-decide-future-creaking-auto-giant-2026-07-09" },
+          { t: "BBC", url: "https://www.bbc.com/news/articles/cx2wzpwn51lo" },
+          { t: "DW", url: "https://amp.dw.com/en/will-volkswagens-crunch-week-decide-germanys-auto-future/a-78483715" },
+          { t: "CNN Business", url: "https://www.cnn.com/2026/06/26/economy/volkswagen-job-cuts" }
+        ]
+      },
+      {
+        num: 6, region: "deporte", fecha: "Temporada 2026",
+        titulo: "Fórmula 1: Kimi Antonelli manda con 267 puntos y Mercedes defiende el título en la era de la energía limitada",
+        texto: ["El campeonato 2026 vive preso de las nuevas reglas de gestión de energía, y por ahora el balance favorece a Mercedes. <b>Kimi Antonelli lidera la tabla con 267 puntos</b>, seguido por su compañero George Russell con 201 y por Lewis Hamilton con 191; Charles Leclerc ocupa el quinto lugar con 155 y Max Verstappen el sexto con 127. El italiano se llevó <b>su primer Gran Premio en casa, en Monza</b>, con una remontada en la que superó a Russell, y ese fin de semana Pierre Gasly logró la pole de su carrera y de Alpine, mientras Colapinto firmaba su mejor posición de largada.", "La novedad de la temporada es <b>el circuito Madring, en Madrid</b>, que hará su debut entre el 11 y el 13 de septiembre; Carlos Sainz, nativo de Madrid y embajador del trazado, pidió paciencia y advirtió que el diseño puede ser tan exigente como Jeddah o Mónaco, y el jefe de Williams James Vowles advirtió que las pruebas de Fórmula 3 sugieren un circuito capaz de romper los monoplazas. La FIA ya decidió <b>acortar las carreras a partir de 2027</b> para acomodar otro ajuste técnico, y Monza mostró de forma muy clara los límites del actual sistema de energía en las rectas largas.", "En el frente de pilotos, Fernando Alonso dejó sin resolver su continuidad para 2027 pese a la mejora de Aston Martin, y la escudería volvió a respaldar a Honda pese al rendimiento de la nueva motorización."],
+        clave: "Antonelli 267 pts · Russell 201 · Hamilton 191 · debut del circuito Madring en Madrid · carreras más cortas desde 2027",
+                img: "img/25-antonelli-mercedes.jpg",
+        fuentes: [
+          { t: "FORMULA 1 (tabla oficial)", url: "https://www.formula1.com/en" },
+          { t: "Grandprix.com", url: "https://www.grandprix.com/news/2026/09" },
+          { t: "FIA (calendario 2026)", url: "https://www.fia.com/events/fia-formula-one-world-championship/season-2026/2026-fia-formula-one-world-championship" },
+          { t: "NewsOnF1", url: "https://www.newsonf1.com/" }
+        ]
+      },
+      {
+        num: 7, region: "global", fecha: "7 y 22 de septiembre de 2026",
+        titulo: "Las marcas chinas alcanzan un récord del 11,7% en Europa y BYD apunta a 2 millones de ventas fuera de China",
+        texto: ["Las automotrices chinas volvieron a duplicar sus ventas en Europa durante agosto y alcanzaron <b>una participación de récord del 11,7%</b>, con BYD y el Grupo Chery mostrando avances de tres dígitos. BYD es la historia: en el primer semestre entregó <b>cerca de 195.000 vehículos cien por ciento eléctricos</b> en la Unión Europea, el Reino Unido y Noruega, con una participación del 7,8% del mercado eléctrico europeo, y se convirtió en la segunda marca no europea por volumen, sólo detrás de Tesla. En mayo llegó a superar a Citroën en matriculaciones mensuales, con 32.380 contra 31.665 unidades, un golpe simbólico para una marca histórica.", "La estrategia se apoya en la localización: la fábrica de Szeged, en Hungría, entra en producción en el último trimestre de 2026 y la de Manisa, en Turquía, a principios de 2027, mientras la red de concesionarios europeos crecía <b>de unos 60 locales a 320 en apenas dieciocho meses</b>. Además, BYD actualizó su objetivo internacional: espera cerrar 2026 cerca de 2 millones de vehículos vendidos en el exterior, por encima de la meta inicial de 1,3 millones, y proyecta 2,5 millones para 2027.", "En contra de esa expansión, la Unión Europea mantiene <b>un arancel base del 10% más un derecho compensatorio del 17,4%</b> sobre los eléctricos importados desde China. El contrapeso del sector también es fuerte: en Estados Unidos, Stellantis decidió terminar la producción de todos sus híbridos enchufables para el modelo 2026 y pivotea hacia híbridos convencionales y eléctricos de autonomía extendida, como el nuevo Cherokee Hybrid, el Grand Wagoneer REEV y el Ram 1500 REV."],
+        clave: "11,7% de cuota europea, un récord · BYD con 195.000 eléctricos en el primer semestre · 2 millones de ventas fuera de China previstas para 2026",
+                img: "img/26-marcas-chinas-europa.jpg",
+        fuentes: [
+          { t: "Automotive News", url: "https://www.autonews.com/retail/sales/ane-chinese-sales-august-8-months-0922/" },
+          { t: "Nikkei Asia", url: "https://asia.nikkei.com/business/automobiles/electric-vehicles/byd-targets-2m-overseas-sales-in-2026-after-strong-run-in-brazil-europe" },
+          { t: "iEVChina", url: "https://ievchina.com/insights/byd-in-europe-2026-sales-dealers-models-szeged-hungary-factory" },
+          { t: "Forocoches Eléctricos", url: "https://forococheselectricos.com/noticias/marcas-chinas-superan-citroen-europa-byd-record-ventas-mayo-2026-20260627-41387.html" }
+        ]
+      },
+      {
+        num: 8, region: "ar", fecha: "Septiembre de 2026",
+        titulo: "La ola china en la Argentina: Leapmotor, smart, Geely, GWM y BYD renuevan la oferta local",
+        texto: ["El mercado argentino vive una de las renovaciones de oferta más intensas de su historia, y <b>el motor principal son las marcas chinas</b>. Leapmotor llegó en junio con el respaldo de Stellantis y inició la venta del B10 y del C10, dos SUV con tecnología de autonomía extendida. smart, la marca de micro autos, volvió al país de la mano de Prestige Auto con dos SUV cien por ciento eléctricos producidos en China, más grandes pero sin perder su esencia premium.", "BYD abrió la preventa de su primer sedán, el Seal 5 DM-i, un híbrido enchufable de casi cinco metros que promete <b>hasta 1.600 kilómetros de autonomía combinada</b> y 3,7 litros cada cien, el mayor rango de su categoría en el mercado local. En la misma línea aparecieron el Geely Icon, el GWM Ora 5 híbrido de 223 CV, el Chery Tiggo 7 PHEV, el Rely de Chery y el MG3 naftero a 20.900 dólares, que lo ubica entre los autos 0 km más accesibles del país.", "El efecto en los patentamientos es medible: las marcas chinas pasaron <b>de 11.141 unidades en el primer trimestre a 26.658</b> en lo que va del año, cerca del 7,8% del mercado, con BYD como líder con 9.268 vehículos, seguido de BAIC, Chery y Haval. La causa estructural es <b>el Decreto 49/2025</b>, que fija arancel cero para los eléctricos importados de la zona extrazona con un valor FOB de hasta 16.000 dólares, y el cupo verde, que este año suma cerca de 24.500 unidades."],
+        clave: "Marcas chinas en 7,8% del mercado · BYD con 9.268 unidades · arancel 0% para eléctricos de hasta US$ 16.000 FOB",
+                img: "img/27-ola-china-argentina.jpg",
+        fuentes: [
+          { t: "Autocosmos (lanzamientos)", url: "https://noticias.autocosmos.com.ar/listado?c=Lanzamientos" },
+          { t: "Clarín (BYD Seal 5)", url: "https://wwwgcp.clarin.com/autos/byd-vende-primer-sedan-argentina-seal-5-hibrido-enchufable_0_Ghulr9tn5X.html" },
+          { t: "El Cerokm (patentamientos)", url: "https://elcerokm.com/patentamientos/2026" },
+          { t: "Auto X Argentina (Leapmotor)", url: "https://autoxarg.com.ar/2026/07" }
+        ]
+      },
+      {
+        num: 9, region: "ar", fecha: "Septiembre de 2026",
+        titulo: "La financiación se vuelve la variable decisiva: créditos UVA, tasa cero y una guerra de tasas entre bancos y fábricas",
+        texto: ["Con el mercado retraído, el acceso al crédito es lo que define cuántos autos se venden. El Banco Nación sumó a su programa Autos una modalidad en pesos ajustados por inflación que permite <b>financiar hasta el cien por ciento del valor de un vehículo 0 km</b> o usado de hasta diez años, sin prenda, con un monto máximo de 100 millones de pesos por usuario y hasta sesenta cuotas. El Banco Provincia siguió con una línea en dos formatos, donde <b>la opción UVA es la más barata del mercado</b>, con una tasa que arranca en UVA más 6% anual y plazos de 12 a 48 meses para montos que van de 100.000 a 50 millones de pesos, frente a la línea tradicional con tasa fija desde el 55% anual.", "Lo más interesante fue que Toyota, la marca líder en ventas, salió al mercado con <b>una línea UVA a 60 meses más barata que la del Banco Nación</b>, aunque con dos condiciones que recortan las opciones: el crédito es prendario y no financia el total del valor.", "En paralelo, casi la mitad de los autos nuevos se venden financiados, y Volkswagen Argentina señala que entre crédito bancario y planes de ahorro se lleva <b>cerca del 70% de las ventas del mercado</b>, una sensibilidad que se nota en la velocidad de reacción: cuando bajan las tasas, el mercado se repone de inmediato. En Estados Unidos, la tendencia es la contraria: un año después de eliminar el incentivo fiscal federal al eléctrico, ese mercado no crece y el híbrido convencional se lleva todo el avance."],
+        clave: "Banco Nación: hasta 100% sin prenda, 60 cuotas · Provincia: UVA + 6% anual · cerca del 70% de las ventas argentinas se financian",
+                img: "img/28-creditos-uva.jpg",
+        fuentes: [
+          { t: "Autoweb", url: "https://www.autoweb.com.ar/2026/09/07/el-banco-nacion-sumo-una-financiacion-uva-al-programa-autos" },
+          { t: "Infobae (Toyota UVA)", url: "https://www.infobae.com/economia/2026/09/09/sorpresa-en-el-mercado-automotor-una-fabrica-lanzo-creditos-uva-mas-baratos-que-los-del-principal-banco-publico" },
+          { t: "El Economista (Provincia)", url: "https://eleconomista.com.ar/autos/como-son-nuevos-prestamos-banco-provincia-comprar-autos-n98168" },
+          { t: "Río Negro (BNA +Autos)", url: "https://www.rionegro.com.ar/economia/autos-con-bna-como-acceder-a-los-creditos-uva-del-banco-nacion-para-comprar-autos-0km-y-usados-4712112" }
+        ]
+      }
+    ]
+  }
+];
+
+
+const REGION = {
+  ar:      { label: "Argentina", cls: "ar" },
+  global:  { label: "Global",    cls: "global" },
+  deporte: { label: "Deportes",  cls: "deporte" }
+};
+
+const el = (t) => document.querySelector(t);
+const grid = el("#grid"), stats = el("#stats");
+let filtro = "all", query = "", edicionIdx = 0, vistaTodas = false;
+
+/* ---------- Tema claro / oscuro ---------- */
+// localStorage puede fallar (file://, visores incrustados): nunca debe frenar el resto del script
+let guardado = null;
+try { guardado = localStorage.getItem("panel-tema"); } catch (e) { guardado = null; }
+if (guardado) document.documentElement.setAttribute("data-theme", guardado);
+function pintarBotonTema(){
+  el("#themeBtn").textContent =
+    document.documentElement.getAttribute("data-theme") === "light" ? "☀️ Tema" : "🌙 Tema";
+}
+el("#themeBtn").onclick = () => {
+  const nuevo = document.documentElement.getAttribute("data-theme") === "light" ? "dark" : "light";
+  document.documentElement.setAttribute("data-theme", nuevo);
+  try { localStorage.setItem("panel-tema", nuevo); } catch (e) { /* sin storage */ }
+  pintarBotonTema();
+};
+pintarBotonTema();
+
+/* ---------- Resumen de arriba ---------- */
+function pintarStats(notas, secciones){
+  const ar = notas.filter(n => n.region === "ar").length;
+  const gl = notas.filter(n => n.region === "global").length;
+  const dp = notas.filter(n => n.region === "deporte").length;
+  stats.innerHTML = `
+    <div class="stat"><span class="k">Notas</span><span class="v bd">${notas.length}</span></div>
+    <div class="stat"><span class="k">Argentina</span><span class="v ar">${ar}</span></div>
+    <div class="stat"><span class="k">Global</span><span class="v gl">${gl}</span></div>
+    <div class="stat"><span class="k">Deportes</span><span class="v dp">${dp}</span></div>
+    <div class="stat"><span class="k">Secciones</span><span class="v">${secciones}</span></div>`;
+}
+
+/* ---------- Selector de edición ---------- */
+const sel = el("#edicion");
+const optTodas = document.createElement("option");
+optTodas.value = "todas";
+optTodas.textContent = "Todas las noticias (" + EDICIONES.reduce((s,e) => s + e.notas.length, 0) + ")";
+sel.appendChild(optTodas);
+EDICIONES.forEach((e, i) => {
+  const o = document.createElement("option");
+  o.value = i;
+  o.textContent = e.titulo || e.fecha;
+  sel.appendChild(o);
+});
+edicionIdx = 0;
+sel.value = "0";
+sel.onchange = () => {
+  if (sel.value === "todas") { vistaTodas = true; }
+  else { vistaTodas = false; edicionIdx = +sel.value; }
+  render();
+};
+const _tit0 = EDICIONES[0].titulo || EDICIONES[0].fecha;
+el("#mast-fecha").textContent = "Edición del " + _tit0.charAt(0).toLowerCase() + _tit0.slice(1);
+
+/* ---------- Render ---------- */
+function render(){
+  const esc = t => String(t || '').replace(/[&<>'"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[c]));
+  // fmt: escapa todo y habilita SOLO <b>/</b> (negritas de datos)
+  const fmt = t => esc(t).replace(/&lt;b&gt;/g, "<b>").replace(/&lt;\/b&gt;/g, "</b>");
+  const q = query.trim().toLowerCase();
+  const match = n => {
+    if (filtro !== "all" && n.region !== filtro) return false;
+    if (!q) return true;
+    return ((n.titulo || "") + " " + (Array.isArray(n.texto) ? n.texto.join(" ") : (n.texto || "")).replace(/<\/?b>/g, "") + " " + (n.clave || "") + " " + (n.fuentes ? n.fuentes.map(f => f.t).join(" ") : ""))
+      .toLowerCase().includes(q);
+  };
+  const card = (n, edTitulo) => `
+    <article class="card" data-region="${n.region}">
+      <div class="c-main">
+        <div class="tags">
+          <span class="tag ${REGION[n.region]?.cls || 'global'}">${REGION[n.region]?.label || n.region}</span>
+          <span class="date">${esc(n.fecha)}</span>
+          ${edTitulo ? `<span class="date ed">${esc(edTitulo)}</span>` : ""}
+        </div>
+        ${n.img ? `<div class="ph"><img src="${n.img}" alt="" loading="lazy" onerror="this.closest('.ph').remove()"></div>` : ""}
+        <h3>${esc(n.titulo)}</h3>
+        <div class="key"><b>En clave:</b> ${esc(n.clave)}</div>
+      </div>
+      <div class="c-side">
+        ${(Array.isArray(n.texto) ? n.texto : [n.texto]).map(p => `<p>${fmt(p)}</p>`).join("")}
+        <div class="src">
+          ${(n.fuentes || []).map(f => `<a href="${f.url}" target="_blank" rel="noopener noreferrer">${esc(f.t)} ↗</a>`).join("")}
+        </div>
+      </div>
+    </article>`;
+  const vacio = '<div class="empty">No encontramos noticias con ese criterio. Probá con otra palabra o quitá los filtros.</div>';
+
+  if (vistaTodas){
+    const total = EDICIONES.reduce((s, e) => s + e.notas.length, 0);
+    const todas = EDICIONES.reduce((acc, e) => acc.concat(e.notas), []);
+    pintarStats(todas, EDICIONES.length);
+    el("#foot-fecha").innerHTML = "<b>Vista activa:</b> Todas las noticias · archivo completo, " + total + " notas.";
+    const grupos = EDICIONES
+      .map(e => ({ titulo: e.titulo || e.fecha, notas: e.notas.filter(match) }))
+      .filter(g => g.notas.length);
+    grid.innerHTML = grupos.length
+      ? grupos.map(g =>
+          `<h2 class="band">${esc(g.titulo)}<span class="band-n">${g.notas.length} nota${g.notas.length === 1 ? "" : "s"}</span></h2>` +
+          g.notas.map(n => card(n, g.titulo)).join("")
+        ).join("")
+      : `<h2 class="band">Todas las noticias<span class="band-n">0 notas</span></h2>` + vacio;
+    return;
+  }
+
+  const ed = EDICIONES[edicionIdx];
+  pintarStats(ed.notas, EDICIONES.length);
+  el("#foot-fecha").innerHTML = "<b>Sección activa:</b> " + (ed.titulo || ed.fecha) + ".";
+  const lista = ed.notas.filter(match);
+  const banda = `<h2 class="band">${esc(ed.titulo || ed.fecha)}<span class="band-n">${lista.length} nota${lista.length === 1 ? "" : "s"}${lista.length !== ed.notas.length ? " de " + ed.notas.length : ""}</span></h2>`;
+  grid.innerHTML = lista.length ? banda + lista.map(n => card(n)).join("") : banda + vacio;
+}
+
+/* ---------- Controles ---------- */
+el("#q").addEventListener("input", e => { query = e.target.value; render(); });
+el("#chips").addEventListener("click", e => {
+  const b = e.target.closest(".chip");
+  if (!b) return;
+  document.querySelectorAll(".chip").forEach(c => {
+    c.classList.remove("on");
+    if (c.setAttribute) c.setAttribute("aria-pressed", c === b);
+  });
+  b.classList.add("on");
+  filtro = b.dataset.f;
+  render();
+});
+
+render();
+</script>
+</body>
+</html>
+
