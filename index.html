@@ -105,7 +105,6 @@
   .tag.global{color:var(--global)}
   .tag.deporte{color:var(--deporte)}
   .date{font-size:12.5px;color:var(--txt-mute);font-weight:600}
-  .date.ed{margin-left:auto;text-align:right}
   .card h3{margin:0;font-family:var(--serif);font-size:24px;line-height:1.15;font-weight:700;letter-spacing:-.015em}
   .card p{margin:0;color:var(--txt-dim);font-size:15px;line-height:1.65}
   .key{border-left:2px solid var(--line);padding:4px 0 4px 16px;
@@ -136,7 +135,6 @@
     .chips{gap:6px}
     .stat{padding-right:12px;margin-right:12px}
     .band,.band:first-child{margin-top:24px;margin-bottom:12px}
-    .tags .date.ed{margin-left:0;text-align:left;width:100%}
   }
   @media print{
     body{background:#fff;color:#000}
@@ -728,7 +726,6 @@ function render(){
         <div class="tags">
           <span class="tag ${REGION[n.region]?.cls || 'global'}">${REGION[n.region]?.label || n.region}</span>
           <span class="date">${esc(n.fecha)}</span>
-          ${edTitulo ? `<span class="date ed">${esc(edTitulo)}</span>` : ""}
         </div>
         ${n.img ? `<div class="ph"><img src="${n.img}" alt="" loading="lazy" onerror="this.closest('.ph').remove()"></div>` : ""}
         <h3>${esc(n.titulo)}</h3>
