@@ -43,7 +43,7 @@
   .btn{border:1px solid var(--line);background:var(--card);color:var(--txt-dim);
     border-radius:var(--radius);padding:9px 11px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;
     font-size:13.5px;font-weight:600;
-    transition:border-color .12s ease,color .12s ease}
+    transition:border-color .12s ease-out,color .12s ease-out}
   .btn:hover{border-color:var(--brand);color:var(--txt)}
   .tico{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.7;
     stroke-linecap:round;stroke-linejoin:round;display:block}
@@ -70,7 +70,7 @@
   .chips{display:flex;gap:8px;flex-wrap:wrap}
   .chip{border:1px solid var(--line);background:transparent;color:var(--txt-dim);
     padding:8px 13px;border-radius:var(--radius);font-size:13px;font-weight:600;cursor:pointer;
-    transition:border-color .12s ease,color .12s ease,background .12s ease}
+    transition:border-color .12s ease-out,color .12s ease-out,background .12s ease-out}
   .chip:hover{color:var(--txt);border-color:var(--txt-mute)}
   .chip.on{color:var(--on-brand);border-color:var(--brand);background:var(--brand)}
   .chip.on.ar{background:var(--ar);border-color:var(--ar);color:#0c130e}
@@ -159,7 +159,7 @@
     <div class="mast-top">
       <div>
         <h1>Panel Automotriz</h1>
-        <p class="mast-line"><b id="mast-fecha"></b> · Noticias de la industria automotriz · Argentina y el mundo</p>
+        <p class="mast-line">Noticias de la industria automotriz · Argentina y el mundo</p>
       </div>
       <button class="btn" id="themeBtn" title="Cambiar tema claro u oscuro" aria-label="Cambiar tema claro u oscuro">
         <svg class="tico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.6v2.3M12 19.1v2.3M4.7 4.7l1.6 1.6M17.7 17.7l1.6 1.6M2.6 12h2.3M19.1 12h2.3M4.7 19.3l1.6-1.6M17.7 6.3l1.6-1.6"/></svg>
@@ -708,9 +708,6 @@ sel.onchange = () => {
   else { vistaTodas = false; edicionIdx = +sel.value; }
   render();
 };
-const _tit0 = EDICIONES[0].titulo || EDICIONES[0].fecha;
-el("#mast-fecha").textContent = "Edición del " + _tit0.charAt(0).toLowerCase() + _tit0.slice(1);
-
 /* ---------- Render ---------- */
 function render(){
   const esc = t => String(t || '').replace(/[&<>'"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[c]));
