@@ -124,6 +124,10 @@
   }
   .empty{grid-column:1/-1;text-align:center;padding:48px 16px;color:var(--txt-mute);
     border:1px dashed var(--line);border-radius:var(--radius)}
+  .empty h4{margin:0 0 8px}
+  .empty p{margin:0 0 16px;color:var(--txt-mute)}
+  .empty-btn{background:var(--brand);color:var(--on-brand);border:0;border-radius:6px;padding:8px 16px;font:inherit;cursor:pointer}
+  mark{background:transparent;color:inherit;font-weight:inherit;border-bottom:1.5px solid var(--brand);padding:0}
 
   footer{margin-top:30px;color:var(--txt-mute);font-size:13px;line-height:1.75}
   footer p{max-width:none}
@@ -829,6 +833,28 @@ function render(){
   const esc = t => String(t || '').replace(/[&<>'"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[c]));
   // fmt: escapa todo y habilita SOLO <b>/</b> (negritas de datos)
   const fmt = t => esc(t).replace(/&lt;b&gt;/g, "<b>").replace(/&lt;\/b&gt;/g, "</b>");
+  // Resaltado de coincidencias (Ctrl+F): recorre HTML ya escapado ignorando etiquetas
+  function highlightHTML(html, term){
+    if(!term) return html;
+    const re = new RegExp(term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
+    let out = '', i = 0, m;
+    while(i < html.length){
+      if(html[i] === '<'){
+        const end = html.indexOf('>', i);
+        if(end === -1){ out += html.slice(i); break; }
+        out += html.slice(i, end + 1);
+        i = end + 1;
+      } else {
+        re.lastIndex = 0;
+        m = re.exec(html.slice(i));
+        if(!m){ out += html.slice(i); break; }
+        const start = i + m.index;
+        out += html.slice(i, start) + '<mark>' + m[0] + '</mark>';
+        i = start + m[0].length;
+      }
+    }
+    return out;
+  }
   const q = query.trim().toLowerCase();
   const match = n => {
     if (filtro !== "all" && n.region !== filtro) return false;
@@ -843,21 +869,21 @@ function render(){
           <span class="tag ${REGION[n.region]?.cls || 'global'}">${REGION[n.region]?.label || n.region}</span>
           <span class="date">${esc(n.fecha)}</span>
         </div>
-        <h3>${esc(n.titulo)}</h3>
+        <h3>${highlightHTML(esc(n.titulo), q)}</h3>
       </div>
       <div class="c-main">
         ${n.img ? `<div class="ph"><img src="${n.img}" alt="" loading="lazy" onerror="this.closest('.ph').remove()"></div>` : ""}
-        <div class="key">${esc(n.clave)}</div>
+        <div class="key">${highlightHTML(esc(n.clave), q)}</div>
       </div>
       <div class="c-side">
-        ${(Array.isArray(n.texto) ? n.texto : [n.texto]).map(p => `<p>${fmt(p)}</p>`).join("")}
+        ${(Array.isArray(n.texto) ? n.texto : [n.texto]).map(p => `<p>${highlightHTML(fmt(p), q)}</p>`).join("")}
         <div class="src">
           ${(n.fuentes || []).length ? '<span class="src-l">Fuentes:</span>' : ""}
           ${(n.fuentes || []).map(f => `<a href="${f.url}" target="_blank" rel="noopener noreferrer">${esc(f.t)} ↗</a>`).join("")}
         </div>
       </div>
     </article>`;
-  const vacio = '<div class="empty">No encontramos noticias con ese criterio. Probá con otra palabra o quitá los filtros.</div>';
+  const vacio = '<div class="empty"><h4>Sin resultados</h4><p>Probá con otra palabra, quitá el filtro de región o elegí otra edición.</p><button class="empty-btn" id="clear-all">Limpiar filtros</button></div>';
 
   if (vistaTodas){
     const total = EDICIONES.reduce((s, e) => s + e.notas.length, 0);
@@ -885,7 +911,27 @@ function render(){
 }
 
 /* ---------- Controles ---------- */
-el("#q").addEventListener("input", e => { query = e.target.value; render(); });
+let qTimer = null;
+el("#q").addEventListener("input", e => {
+  query = e.target.value;
+  clearTimeout(qTimer);
+  qTimer = setTimeout(render, 300);
+});
+el("#grid").addEventListener("click", e => {
+  const b = e.target.closest("#clear-all");
+  if (!b) return;
+  el("#q").value = "";
+  query = "";
+  document.querySelectorAll(".chip").forEach(c => {
+    c.classList.remove("on");
+    c.setAttribute("aria-pressed", c === document.querySelector('#chips .chip[data-f="all"]'));
+  });
+  const firstChip = el('#chips .chip[data-f="all"]');
+  if (firstChip){ firstChip.classList.add("on"); firstChip.setAttribute("aria-pressed", "true"); }
+  filtro = "all";
+  const sel = el("#edicion");
+  if (sel){ sel.value = "todas"; sel.dispatchEvent(new Event("change")); }
+});
 el("#chips").addEventListener("click", e => {
   const b = e.target.closest(".chip");
   if (!b) return;
