@@ -60,7 +60,9 @@
 
   .toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:18px 0 18px;
     position:sticky;top:0;z-index:20;
-    background:var(--bg);padding:12px 0;border-bottom:1px solid var(--line)}
+    background:var(--bg);padding:12px 0;border-bottom:1px solid var(--line);
+    transition:transform .18s ease-out,opacity .18s ease-out}
+  .toolbar.hide{transform:translateY(-100%);opacity:0;pointer-events:none}
   .search{flex:1 1 240px;min-width:200px;position:relative}
   .search input{width:100%;padding:10px 14px 10px 38px;border-radius:var(--radius);
     border:1px solid var(--line);background:var(--card);color:var(--txt);font-size:14.5px;outline:none}
@@ -79,12 +81,49 @@
   html[data-theme="light"] .chip.on.ar{color:#fff}
   html[data-theme="light"] .chip.on.gl{color:#fff}
   html[data-theme="light"] .chip.on.dp{color:#fff}
-  select.ed{border:1px solid var(--line);background:var(--card);color:var(--txt);
-    padding:9px 12px;border-radius:var(--radius);font-size:13.5px;font-weight:600;outline:none;cursor:pointer;max-width:100%}
-  .ed-wrap{display:flex;align-items:center;gap:8px;min-width:0}
-  .ed-lbl{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;
-    color:var(--txt-mute);white-space:nowrap}
-  .btn:focus-visible, .chip:focus-visible, .ed:focus-visible, .search input:focus-visible, .src a:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+  .ed-wrap{display:flex;align-items:flex-start;gap:8px;min-width:0;position:relative}
+  .cal-toggle{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);
+    background:var(--card);color:var(--txt);padding:9px 12px;border-radius:var(--radius);
+    font-size:13px;font-weight:600;cursor:pointer;max-width:100%;
+    transition:border-color .12s ease-out}
+  .cal-toggle:hover{border-color:var(--txt-mute)}
+  .cal-toggle[aria-expanded="true"]{border-color:var(--brand)}
+  .cal-toggle-lbl{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;
+    color:var(--txt-mute)}
+  .cal-toggle-val{color:var(--txt);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .cal-toggle-ic{color:var(--txt-mute);font-size:11px;transition:transform .15s ease-out}
+  .cal-toggle[aria-expanded="true"] .cal-toggle-ic{transform:rotate(180deg)}
+  .cal{position:absolute;top:calc(100% + 6px);left:0;z-index:30;
+    display:flex;flex-direction:column;gap:8px;min-width:250px;
+    background:var(--bg);border:1px solid var(--line);border-radius:var(--radius);
+    padding:10px;box-shadow:0 8px 24px rgba(0,0,0,.12)}
+  .cal[hidden]{display:none}
+  .cal-todas,.cal-ant{border:1px solid var(--line);background:var(--card);color:var(--txt);
+    padding:8px 12px;border-radius:var(--radius);font-size:13px;font-weight:600;cursor:pointer;
+    text-align:left;transition:border-color .12s ease-out,color .12s ease-out}
+  .cal-todas:hover,.cal-ant:hover{border-color:var(--txt-mute)}
+  .cal-todas[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:var(--on-brand)}
+  .cal-head{display:flex;align-items:center;gap:8px}
+  .cal-title{font-family:var(--serif);font-size:14.5px;font-weight:700;color:var(--txt);
+    min-width:130px;text-align:center}
+  .cal-nav{width:32px;height:32px;border:1px solid var(--line);background:transparent;
+    color:var(--txt);border-radius:var(--radius);font-size:18px;line-height:1;cursor:pointer;
+    display:inline-flex;align-items:center;justify-content:center}
+  .cal-nav:hover{border-color:var(--txt-mute)}
+  .cal-nav:disabled{opacity:.35;cursor:default}
+  .cal-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+  .cal-dow span{font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
+    color:var(--txt-mute);text-align:center;padding:2px 0}
+  .cal-day{height:34px;border:1px solid transparent;border-radius:6px;background:transparent;
+    color:var(--txt-dim);font-size:13px;font-weight:600;cursor:default;padding:0}
+  .cal-day.on{color:var(--brand);border-color:var(--brand);
+    background:color-mix(in srgb, var(--brand) 16%, transparent);cursor:pointer;font-weight:700}
+  .cal-day.on:hover{background:color-mix(in srgb, var(--brand) 32%, transparent);color:var(--brand)}
+  .cal-day.cur{background:var(--brand);border-color:var(--brand);color:var(--on-brand);font-weight:700}
+  .cal-day.cur:hover{color:var(--on-brand);background:var(--brand)}
+  .btn:focus-visible, .chip:focus-visible, .cal-todas:focus-visible, .cal-ant:focus-visible,
+  .cal-nav:focus-visible, .cal-day.on:focus-visible, .search input:focus-visible, .src a:focus-visible{
+    outline:2px solid var(--brand);outline-offset:2px}
 
   .grid{display:grid;grid-template-columns:1fr;gap:14px;align-content:start}
   .band{grid-column:1/-1;display:flex;justify-content:space-between;align-items:baseline;
@@ -137,7 +176,8 @@
   @media (max-width:620px){
     .grid{grid-template-columns:1fr}
     .toolbar .ed-wrap{flex:1 1 100%;margin-top:4px}
-    .toolbar select.ed{flex:1 1 100%}
+    .cal-day{height:40px;font-size:14px}
+    .cal-title{min-width:120px}
     .card{gap:12px;padding:20px 0}
     /* Ajustes móviles (auditoría Antigravity): menos padding, chips y stats más compactos */
     .wrap{padding:0 16px 40px}
@@ -191,15 +231,31 @@
       <button class="chip dp" data-f="deporte" aria-pressed="false">Deportes</button>
     </div>
     <div class="ed-wrap">
-      <label class="ed-lbl" for="edicion">Edición</label>
-      <select class="ed" id="edicion" autocomplete="off" aria-label="Filtrar por edición o ver archivo completo"></select>
+      <button type="button" class="cal-toggle" id="cal-toggle" aria-expanded="false" aria-controls="cal-panel">
+        <span class="cal-toggle-lbl">Edición</span>
+        <span class="cal-toggle-val" id="cal-toggle-val">Todas las noticias</span>
+        <span class="cal-toggle-ic" aria-hidden="true">&#9662;</span>
+      </button>
+      <div class="cal" id="cal-panel" role="group" aria-label="Calendario de ediciones" hidden>
+        <button type="button" class="cal-todas" id="cal-todas" aria-pressed="true">Todas las noticias</button>
+        <div class="cal-head">
+          <button type="button" class="cal-nav" id="cal-prev" aria-label="Mes anterior">&#8249;</button>
+          <span class="cal-title" id="cal-title" aria-live="polite">septiembre 2026</span>
+          <button type="button" class="cal-nav" id="cal-next" aria-label="Mes siguiente">&#8250;</button>
+        </div>
+        <div class="cal-grid cal-dow" aria-hidden="true">
+          <span>Lu</span><span>Ma</span><span>Mi</span><span>Ju</span><span>Vi</span><span>Sá</span><span>Do</span>
+        </div>
+        <div class="cal-grid" id="cal-days"></div>
+        <button type="button" class="cal-ant" id="cal-ant">Archivo anterior &#183; julio&#8211;28/09</button>
+      </div>
     </div>
   </div>
 
   <main class="grid" id="grid"></main>
 
   <footer>
-    <p><b>Cómo leerlo.</b> El selector <b>Edición</b> permite ir de una edición diaria a la sección <b>Todas las noticias</b>, que reúne el archivo completo agrupado por fecha; ahí el buscador filtra por cualquier palabra entre títulos, textos y fuentes. Los filtros por Argentina, Global y Deportes se aplican a la sección visible, y se pueden combinar con la búsqueda</p>
+    <p><b>Cómo leerlo.</b> El <b>calendario</b> permite ir de una edición diaria a <b>Todas las noticias</b>, que reúne el archivo completo agrupado por fecha; los días con edición están marcados, y ahí el buscador filtra por cualquier palabra entre títulos, textos y fuentes. Los filtros por Argentina, Global y Deportes se aplican a la sección visible, y se pueden combinar con la búsqueda</p>
     <p id="foot-fecha"></p>
   </footer>
 </div>
@@ -806,28 +862,117 @@ function pintarStats(notas, secciones){
     <div class="stat"><span class="k">Secciones</span><span class="v">${secciones}</span></div>`;
 }
 
-/* ---------- Selector de edición ---------- */
-const sel = el("#edicion");
-const optTodas = document.createElement("option");
-optTodas.value = "todas";
-optTodas.textContent = "Todas las noticias (" + EDICIONES.reduce((s,e) => s + e.notas.length, 0) + ")";
-sel.appendChild(optTodas);
+/* ---------- Calendario de edición ---------- */
+// Mapa fecha ISO -> índice en EDICIONES (sin new Date(string) por UTC-3)
+const fechaIdx = {};
 EDICIONES.forEach((e, i) => {
-  const o = document.createElement("option");
-  o.value = i;
-  o.textContent = e.titulo || e.fecha;
-  sel.appendChild(o);
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(e.fecha || "");
+  if (m) fechaIdx[e.fecha] = i;
 });
-edicionIdx = 0;
-const syncSel = () => { sel.value = vistaTodas ? "todas" : String(edicionIdx); };
-syncSel();
-setTimeout(syncSel, 0); // por si el navegador restaura el valor del select después de cargar
-window.addEventListener("pageshow", syncSel);
-sel.onchange = () => {
-  if (sel.value === "todas") { vistaTodas = true; }
-  else { vistaTodas = false; edicionIdx = +sel.value; }
-  render();
+const MESES = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
+const idxAnt = EDICIONES.findIndex(e => e.fecha === "anteriores");
+// Mes visible por defecto: septiembre 2026
+let calY = 2026, calM = 8; // calM: 0-ene … 8-sep
+
+function etiquetaEd(){
+  if (vistaTodas) return "Todas las noticias";
+  const ed = EDICIONES[edicionIdx];
+  return (ed && (ed.titulo || ed.fecha)) || "—";
+}
+function pintaCal(){
+  const t = el("#cal-title");
+  if (t) t.textContent = MESES[calM] + " " + calY;
+  const bt = el("#cal-todas");
+  if (bt && bt.setAttribute) bt.setAttribute("aria-pressed", vistaTodas);
+  const tv = el("#cal-toggle-val");
+  if (tv) tv.textContent = etiquetaEd();
+  // lunes=0 … domingo=6
+  const primero = new Date(calY, calM, 1);
+  const dow = (primero.getDay() + 6) % 7;
+  const diasMes = new Date(calY, calM + 1, 0).getDate();
+  let html = "";
+  for (let i = 0; i < dow; i++) html += '<span></span>';
+  for (let d = 1; d <= diasMes; d++){
+    const iso = calY + "-" + String(calM + 1).padStart(2, "0") + "-" + String(d).padStart(2, "0");
+    const has = Object.prototype.hasOwnProperty.call(fechaIdx, iso);
+    const ed = has ? EDICIONES[fechaIdx[iso]] : null;
+    const cur = has && !vistaTodas && edicionIdx === fechaIdx[iso];
+    const label = has
+      ? ' aria-label="Ir a la edición del ' + d + ' de ' + MESES[calM] + '"'
+      : ' aria-label="' + d + ' de ' + MESES[calM] + ', sin edición" aria-disabled="true"';
+    html += '<button type="button" class="cal-day' + (has ? " on" : "") + (cur ? " cur" : "") +
+      '" data-iso="' + iso + '"' + (has ? "" : " disabled") + label + '>' + d + "</button>";
+  }
+  el("#cal-days").innerHTML = html;
+  el("#cal-prev").disabled = (calY === 2026 && calM <= 8);
+  el("#cal-next").disabled = (calY === 2026 && calM >= 9);
+}
+function navegaMes(delta){
+  calM += delta;
+  if (calM < 0){ calM = 11; calY--; }
+  if (calM > 11){ calM = 0; calY++; }
+  pintaCal();
+}
+el("#cal-prev").onclick = () => navegaMes(-1);
+el("#cal-next").onclick = () => navegaMes(1);
+// Toggle: abrir / cerrar panel (al abrir, ir al mes de la edición activa)
+el("#cal-toggle").onclick = () => {
+  const panel = el("#cal-panel");
+  const tg = el("#cal-toggle");
+  if (!panel || !tg) return;
+  const wasHidden = panel.hasAttribute("hidden");
+  if (wasHidden){
+    if (!vistaTodas){
+      const ed = EDICIONES[edicionIdx];
+      const m = ed && /^(\d{4})-(\d{2})-/.exec(ed.fecha || "");
+      if (m){ calY = +m[1]; calM = +m[2] - 1; }
+    }
+    pintaCal();
+    panel.removeAttribute("hidden");
+  } else {
+    panel.setAttribute("hidden", "");
+  }
+  tg.setAttribute("aria-expanded", wasHidden);
 };
+// Cerrar al elegir día / Todas / Anteriores
+function cierraCal(){
+  const panel = el("#cal-panel");
+  if (panel && panel.setAttribute) panel.setAttribute("hidden", "");
+  const tg = el("#cal-toggle");
+  if (tg && tg.setAttribute) tg.setAttribute("aria-expanded", "false");
+}
+el("#cal-days").addEventListener("click", e => {
+  const b = e.target.closest(".cal-day.on");
+  if (!b) return;
+  const i = fechaIdx[b.dataset.iso];
+  if (i === undefined) return;
+  vistaTodas = false;
+  edicionIdx = i;
+  render();
+  pintaCal();
+  cierraCal();
+});
+el("#cal-todas").onclick = () => {
+  vistaTodas = true;
+  render();
+  pintaCal();
+  cierraCal();
+};
+el("#cal-ant").onclick = () => {
+  if (idxAnt < 0) return;
+  vistaTodas = false;
+  edicionIdx = idxAnt;
+  render();
+  pintaCal();
+  cierraCal();
+};
+// Cerrar al hacer clic afuera
+document.addEventListener("click", e => {
+  const panel = el("#cal-panel");
+  if (!panel || !panel.hasAttribute || panel.hasAttribute("hidden")) return;
+  if (e.target.closest && e.target.closest(".ed-wrap")) return;
+  cierraCal();
+});
 /* ---------- Render ---------- */
 function render(){
   const esc = t => String(t || '').replace(/[&<>'"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[c]));
@@ -929,8 +1074,9 @@ el("#grid").addEventListener("click", e => {
   const firstChip = el('#chips .chip[data-f="all"]');
   if (firstChip){ firstChip.classList.add("on"); firstChip.setAttribute("aria-pressed", "true"); }
   filtro = "all";
-  const sel = el("#edicion");
-  if (sel){ sel.value = "todas"; sel.dispatchEvent(new Event("change")); }
+  vistaTodas = true;
+  render();
+  pintaCal();
 });
 el("#chips").addEventListener("click", e => {
   const b = e.target.closest(".chip");
@@ -945,6 +1091,26 @@ el("#chips").addEventListener("click", e => {
 });
 
 render();
+pintaCal();
+
+/* ---------- Toolbar: se esconde al bajar, vuelve al subir ---------- */
+(function(){
+  const bar = document.querySelector(".toolbar");
+  if (!bar) return;
+  let lastY = window.scrollY, ticking = false;
+  window.addEventListener("scroll", () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      const y = window.scrollY;
+      if (y < 80) bar.classList.remove("hide");          // cerca del tope: siempre visible
+      else if (y > lastY + 4) bar.classList.add("hide"); // bajando
+      else if (y < lastY - 4) bar.classList.remove("hide"); // subiendo
+      lastY = y;
+      ticking = false;
+    });
+  }, { passive: true });
+})();
 </script>
 </body>
 </html>
