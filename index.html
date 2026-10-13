@@ -228,7 +228,7 @@
       <button class="chip on" data-f="all" aria-pressed="true">Todo</button>
       <button class="chip ar" data-f="ar" aria-pressed="false">Argentina</button>
       <button class="chip gl" data-f="global" aria-pressed="false">Global</button>
-      <button class="chip dp" data-f="deporte" aria-pressed="false">Deportes</button>
+      <button class="chip dp" data-f="deporte" aria-pressed="false">Competencias</button>
     </div>
     <div class="ed-wrap">
       <button type="button" class="cal-toggle" id="cal-toggle" aria-expanded="false" aria-controls="cal-panel">
@@ -269,6 +269,32 @@
    fecha, titulo, texto, clave y fuentes [{ t, url }].
    ========================================================================= */
 const EDICIONES = [
+  {
+    fecha: "2026-10-12",
+    titulo: "Lunes 12 de octubre de 2026",
+    notas: [
+      {
+        num: 1, region: "deporte", fecha: "12 de octubre de 2026",
+        titulo: "Hamilton desobedeció a Ferrari en Singapur y Vasseur lo expuso: «Tenemos que hablar con él»",
+        texto: ["Lewis Hamilton desobedeció la orden de Ferrari durante el Gran Premio de Singapur y <b>perdió un podio</b> que ya tenía asegurado: con ambos autos llamados a boxes bajo régimen de auto de seguridad virtual, el británico decidió quedarse en pista con gomas blandas muy usadas y terminó quinto, detrás de Lando Norris, mientras que Charles Leclerc sí paró y fue segundo.", "El jefe de la escudería, Fred Vasseur, fue contundente con la prensa: «Llamamos a ambos coches, chicos, volved a boxes bajo el régimen de VSC, y uno de mis pilotos dijo no, prefiero quedarme en pista. No culpéis al equipo». El francés calculó que se perdieron unos <b>10 puntos</b> valiosos y que el resultado posible era un segundo y tercer puesto para Leclerc y Hamilton.", "A pesar del enojo, Vasseur trató de rescatar el fin de semana: destacó que los pilotos intercambiaron posiciones en pista con actitud clara y justa entre ellos, y no quiso cargar contra la prensa que preguntó por el toque entre los McLaren de la Sprint. Hamilton, por su parte, hizo el mea culpa y reconoció que fue «una dolorosa lección» en un Mundial donde cada punto cuenta."],
+        clave: "Hamilton ignoró la orden de parar en VSC y perdió el podio en Singapur · Vasseur: «no culpéis al equipo, tenemos que hablar con él» · Leclerc 2.º cumplió la estrategia",
+        img: "img/48-hamilton-ferrari-vsc.jpg",
+        fuentes: [
+          { t: "MARCA (12 de octubre)", url: "https://www.marca.com/motor/formula1/gp-singapur/2026/10/12/hamilton-cumplio-estrategia-ferrari-hablar.html" }
+        ]
+      },
+      {
+        num: 2, region: "ar", fecha: "12 de octubre de 2026",
+        titulo: "Los 3 autos 0 km más baratos de la Argentina en octubre: JMEV Easy 3, Hyundai HB20 y Renault Kwid, todos bajo $29 millones",
+        texto: ["El ranking de los 0 km más baratos del país en octubre de 2026 lo encabeza el <b>JMEV Easy 3</b>, con un precio de referencia de US$ 17.900, equivalentes a unos $27.566.000. El eléctrico chino de la marca que representa Grupo Antelo se consolida como la puerta de entrada al mercado de nuevos, por debajo de todas las opciones a combustión.", "En segundo lugar quedó el Hyundai HB20, con un precio inicial de $28.500.000, seguido muy de cerca por el Renault Kwid, que parte desde $28.580.000, apenas <b>$80.000 de diferencia</b>. Los tres modelos se ubican por debajo de los $29 millones y representan las alternativas más accesibles para quienes buscan estrenar.", "Los precios corresponden a las versiones de entrada y pueden variar según gastos de patentamiento, costos de entrega y condiciones comerciales de cada concesionario. El dato relevante es la brecha mínima en el escalón de entrada: apenas $80.000 separan al HB20 del Kwid, y el JMEV Easy 3 eléctrico se impone como el más barato de todos."],
+        clave: "JMEV Easy 3 US$ 17.900 ($27,5 M) el más barato · Hyundai HB20 $28,5 M y Renault Kwid $28,58 M · los tres bajo $29 millones",
+        img: "img/49-autos-mas-baratos.jpg",
+        fuentes: [
+          { t: "Canal 26 (12 de octubre)", url: "https://www.canal26.com/autos/2026/10/12/cuales-son-los-3-autos-0-km-mas-baratos-de-la-argentina-en-octubre-2026/" }
+        ]
+      }
+    ]
+  },
   {
     fecha: "2026-10-11",
     titulo: "Domingo 11 de octubre de 2026",
@@ -925,7 +951,7 @@ const EDICIONES = [
 const REGION = {
   ar:      { label: "Argentina", cls: "ar" },
   global:  { label: "Global",    cls: "global" },
-  deporte: { label: "Deportes",  cls: "deporte" }
+  deporte: { label: "Competencias",  cls: "deporte" }
 };
 
 const el = (t) => document.querySelector(t);
@@ -949,7 +975,7 @@ function pintarStats(notas, secciones){
     <div class="stat"><span class="k">Notas</span><span class="v bd">${notas.length}</span></div>
     <div class="stat"><span class="k">Argentina</span><span class="v ar">${ar}</span></div>
     <div class="stat"><span class="k">Global</span><span class="v gl">${gl}</span></div>
-    <div class="stat"><span class="k">Deportes</span><span class="v dp">${dp}</span></div>`;
+    <div class="stat"><span class="k">Competencias</span><span class="v dp">${dp}</span></div>`;
 }
 
 /* ---------- Calendario de edición ---------- */
