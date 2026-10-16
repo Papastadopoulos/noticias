@@ -6,201 +6,534 @@
 <title>Panel Automotriz · Noticias de la industria</title>
 <meta name="description" content="Dashboard de noticias de la industria automotriz, con prioridad en Argentina y cobertura global. Se actualiza a diario.">
 <style>
-  :root{
-    --bg:#101318; --bg-soft:#171b22; --card:#151a21; --line:#272d37;
-    --txt:#e7eaef; --txt-dim:#a9b1bd; --txt-mute:#8a93a1;
-    --brand:#5b8fd6; --on-brand:#0e1524;
-    --ar:#2fae68; --global:#c9821f; --deporte:#9779e0;
-    --shadow:0 1px 2px rgba(0,0,0,.35); --radius:6px;
-    --serif:Georgia,"Times New Roman",Times,serif;
+  :root {
+    --bg: #121316;
+    --bg-soft: #181a1f;
+    --card: #15171b;
+    --line: #252830;
+    --line-strong: #3f4450;
+    --txt: #eeeff2;
+    --txt-dim: #a6abb6;
+    --txt-mute: #707684;
+    --accent: #eeeff2;
+    --on-accent: #121316;
+    --brand: #6297e6;
+    --ar: #5ba2db;
+    --global: #4ba375;
+    --deporte: #e05353;
+    --radius: 6px;
+    --serif: Georgia, "Times New Roman", Times, serif;
+    --sans: "Segoe UI", Inter, system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif;
   }
-  html[data-theme="light"]{
-    --bg:#ffffff; --bg-soft:#f6f6f3; --card:transparent; --line:#dcdfe4;
-    --txt:#1b1e24; --txt-dim:#4e545f; --txt-mute:#6b7280;
-    --brand:#3568c4; --on-brand:#ffffff;
-    --ar:#148548; --global:#b95c0e; --deporte:#8449f0;
-    --shadow:0 1px 2px rgba(20,24,32,.08);
+  html[data-theme="light"] {
+    --bg: #ffffff;
+    --bg-soft: #f5f5f3;
+    --card: #ffffff;
+    --line: #e3e5e8;
+    --line-strong: #17181c;
+    --txt: #141619;
+    --txt-dim: #454952;
+    --txt-mute: #787f8c;
+    --accent: #141619;
+    --on-accent: #ffffff;
+    --brand: #2b5db8;
+    --ar: #1d5fb5;
+    --global: #1e7e4e;
+    --deporte: #b91c1c;
   }
-  *{box-sizing:border-box}
-  html,body{margin:0;padding:0}
-  body{
-    background:var(--bg);
-    color:var(--txt);
-    font-family:"Segoe UI",Inter,system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
-    line-height:1.6; min-height:100vh; -webkit-font-smoothing:antialiased;
-  }
-  .wrap{max-width:1440px;margin:0 auto;padding:0 24px 70px}
 
-  header.mast{
-    padding:30px 0 16px;border-bottom:4px double var(--line);margin-bottom:6px;
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--txt);
+    font-family: var(--sans);
+    line-height: 1.6;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
   }
-  .mast-top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
-  h1{margin:0;font-family:var(--serif);font-size:clamp(30px,5vw,44px);line-height:1.05;
-    font-weight:700;letter-spacing:-.01em;color:var(--txt)}
-  .mast-line{margin:8px 0 0;font-size:13px;color:var(--txt-mute);letter-spacing:.04em;
-    text-transform:uppercase;font-weight:600}
-  .mast-line b{color:var(--txt-dim);font-weight:700}
-  .btn{border:1px solid var(--line);background:var(--card);color:var(--txt-dim);
-    border-radius:var(--radius);padding:9px 11px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;
-    font-size:13.5px;font-weight:600;
-    transition:border-color .12s ease-out,color .12s ease-out}
-  .btn:hover{border-color:var(--brand);color:var(--txt)}
-  .tico{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.7;
-    stroke-linecap:round;stroke-linejoin:round;display:block}
-  html[data-theme="light"] .tico.moon{display:none}
-  html[data-theme="dark"] .tico:not(.moon){display:none}
+  .wrap { max-width: 1360px; margin: 0 auto; padding: 0 24px 70px; }
 
-  .stats{display:flex;flex-wrap:wrap;gap:8px 0;margin:0;padding:14px 0 0;}
-  .stat{display:flex;align-items:baseline;gap:8px;padding:0 22px 0 0;margin-right:22px;
-    border-right:1px solid var(--line)}
-  .stat:last-child{border-right:0;margin-right:0;padding-right:0}
-  .stat .k{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--txt-mute);font-weight:700}
-  .stat .v{font-size:20px;font-weight:700;line-height:1.2;font-variant-numeric:tabular-nums}
-  .v.ar{color:var(--ar)} .v.gl{color:var(--global)} .v.dp{color:var(--deporte)} .v.bd{color:var(--brand)}
+  /* Masthead editorial */
+  header.mast {
+    padding: 28px 0 16px;
+    border-bottom: 3px double var(--line);
+    margin-bottom: 4px;
+  }
+  .mast-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  h1 {
+    margin: 0;
+    font-family: var(--serif);
+    font-size: clamp(28px, 4.2vw, 40px);
+    line-height: 1.05;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    color: var(--txt);
+  }
+  .mast-line {
+    margin: 6px 0 0;
+    font-size: 12.5px;
+    color: var(--txt-mute);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+  .btn {
+    border: 1px solid var(--line);
+    background: transparent;
+    color: var(--txt-dim);
+    border-radius: var(--radius);
+    padding: 8px 10px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 600;
+    transition: border-color .12s ease-out, color .12s ease-out;
+  }
+  .btn:hover { border-color: var(--txt-dim); color: var(--txt); }
+  .tico {
+    width: 16px;
+    height: 16px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    display: block;
+  }
+  html[data-theme="light"] .tico.moon { display: none; }
+  html[data-theme="dark"] .tico:not(.moon) { display: none; }
 
-  .toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:18px 0 18px;
-    position:sticky;top:0;z-index:20;
-    background:var(--bg);padding:12px 0;border-bottom:1px solid var(--line);
-    transition:transform .18s ease-out,opacity .18s ease-out}
-  .toolbar.hide{transform:translateY(-100%);opacity:0;pointer-events:none}
-  .search{flex:1 1 240px;min-width:200px;position:relative}
-  .search input{width:100%;padding:10px 14px 10px 38px;border-radius:var(--radius);
-    border:1px solid var(--line);background:var(--card);color:var(--txt);font-size:14.5px;outline:none}
-  .search input:focus{border-color:var(--brand);box-shadow:0 0 0 3px color-mix(in srgb, var(--brand) 22%, transparent)}
-  .search .ic{position:absolute;left:13px;top:50%;transform:translateY(-50%);
-    width:15px;height:15px;fill:var(--txt-mute);pointer-events:none}
-  .chips{display:flex;gap:8px;flex-wrap:wrap}
-  .chip{border:1px solid var(--line);background:transparent;color:var(--txt-dim);
-    padding:8px 13px;border-radius:var(--radius);font-size:13px;font-weight:600;cursor:pointer;
-    transition:border-color .12s ease-out,color .12s ease-out,background .12s ease-out}
-  .chip:hover{color:var(--txt);border-color:var(--txt-mute)}
-  .chip.on{color:var(--on-brand);border-color:var(--brand);background:var(--brand)}
-  .chip.on.ar{background:var(--ar);border-color:var(--ar);color:#0c130e}
-  .chip.on.gl{background:var(--global);border-color:var(--global);color:#1a1206}
-  .chip.on.dp{background:var(--deporte);border-color:var(--deporte);color:#140a24}
-  html[data-theme="light"] .chip.on.ar{color:#fff}
-  html[data-theme="light"] .chip.on.gl{color:#fff}
-  html[data-theme="light"] .chip.on.dp{color:#fff}
-  .ed-wrap{display:flex;align-items:flex-start;gap:8px;min-width:0;position:relative}
-  .cal-toggle{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);
-    background:var(--card);color:var(--txt);padding:9px 12px;border-radius:var(--radius);
-    font-size:13px;font-weight:600;cursor:pointer;max-width:100%;
-    transition:border-color .12s ease-out}
-  .cal-toggle:hover{border-color:var(--txt-mute)}
-  .cal-toggle[aria-expanded="true"]{border-color:var(--brand)}
-  .cal-toggle-lbl{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;
-    color:var(--txt-mute)}
-  .cal-toggle-val{color:var(--txt);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .cal-toggle-ic{color:var(--txt-mute);font-size:11px;transition:transform .15s ease-out}
-  .cal-toggle[aria-expanded="true"] .cal-toggle-ic{transform:rotate(180deg)}
-  .cal{position:absolute;top:calc(100% + 6px);left:0;z-index:30;
-    display:flex;flex-direction:column;gap:8px;min-width:250px;
-    background:var(--bg);border:1px solid var(--line);border-radius:var(--radius);
-    padding:10px;box-shadow:0 8px 24px rgba(0,0,0,.12)}
-  .cal[hidden]{display:none}
-  .cal-todas,.cal-ant{border:1px solid var(--line);background:var(--card);color:var(--txt);
-    padding:8px 12px;border-radius:var(--radius);font-size:13px;font-weight:600;cursor:pointer;
-    text-align:left;transition:border-color .12s ease-out,color .12s ease-out}
-  .cal-todas:hover,.cal-ant:hover{border-color:var(--txt-mute)}
-  .cal-todas[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:var(--on-brand)}
-  .cal-head{display:flex;align-items:center;gap:8px}
-  .cal-title{font-family:var(--serif);font-size:14.5px;font-weight:700;color:var(--txt);
-    min-width:130px;text-align:center}
-  .cal-nav{width:32px;height:32px;border:1px solid var(--line);background:transparent;
-    color:var(--txt);border-radius:var(--radius);font-size:18px;line-height:1;cursor:pointer;
-    display:inline-flex;align-items:center;justify-content:center}
-  .cal-nav:hover{border-color:var(--txt-mute)}
-  .cal-nav:disabled{opacity:.35;cursor:default}
-  .cal-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
-  .cal-dow span{font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
-    color:var(--txt-mute);text-align:center;padding:2px 0}
-  .cal-day{height:34px;border:1px solid transparent;border-radius:6px;background:transparent;
-    color:var(--txt-dim);font-size:13px;font-weight:600;cursor:default;padding:0}
-  .cal-day.on{color:var(--brand);border-color:var(--brand);
-    background:color-mix(in srgb, var(--brand) 16%, transparent);cursor:pointer;font-weight:700}
-  .cal-day.on:hover{background:color-mix(in srgb, var(--brand) 32%, transparent);color:var(--brand)}
-  .cal-day.cur{background:var(--brand);border-color:var(--brand);color:var(--on-brand);font-weight:700}
-  .cal-day.cur:hover{color:var(--on-brand);background:var(--brand)}
+  /* Toolbar */
+  .toolbar {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin: 14px 0 16px;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: var(--bg);
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+    transition: transform .18s ease-out, opacity .18s ease-out;
+  }
+  .toolbar.hide { transform: translateY(-100%); opacity: 0; pointer-events: none; }
+
+  /* Buscador compacto a la izquierda */
+  .search {
+    flex: 0 0 210px;
+    position: relative;
+  }
+  .search input {
+    width: 100%;
+    padding: 7px 11px 7px 32px;
+    border-radius: var(--radius);
+    border: 1px solid var(--line);
+    background: var(--card);
+    color: var(--txt);
+    font-size: 13px;
+    outline: none;
+    transition: border-color .15s ease-out, box-shadow .15s ease-out;
+  }
+  .search input:focus {
+    border-color: var(--line-strong);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--line-strong) 20%, transparent);
+  }
+  .search .ic {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 14px;
+    height: 14px;
+    fill: var(--txt-mute);
+    pointer-events: none;
+  }
+
+  /* Chips con contadores */
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+  .chip {
+    border: 1px solid var(--line);
+    background: transparent;
+    color: var(--txt-dim);
+    padding: 6px 10px;
+    border-radius: var(--radius);
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: border-color .12s, color .12s, background .12s, opacity .12s;
+  }
+  .chip:hover { color: var(--txt); border-color: var(--txt-mute); }
+  .chip.on {
+    color: var(--on-accent);
+    border-color: var(--accent);
+    background: var(--accent);
+    font-weight: 700;
+  }
+  .chip.zero { opacity: 0.55; }
+  .chip-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .chip-dot.ar { background: var(--ar); }
+  .chip-dot.gl { background: var(--global); }
+  .chip-dot.dp { background: var(--deporte); }
+  .chip-cnt {
+    font-size: 11px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    padding: 0 5px;
+    border-radius: 10px;
+    background: var(--bg-soft);
+    color: var(--txt-mute);
+    line-height: 1.45;
+  }
+  .chip.on .chip-cnt {
+    background: color-mix(in srgb, var(--on-accent) 18%, transparent);
+    color: var(--on-accent);
+  }
+
+  /* Selector de edición */
+  .ed-wrap {
+    margin-left: auto;
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  .cal-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid var(--line);
+    background: var(--card);
+    color: var(--txt);
+    padding: 7px 11px;
+    border-radius: var(--radius);
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color .12s ease-out;
+  }
+  .cal-toggle:hover { border-color: var(--txt-mute); }
+  .cal-toggle[aria-expanded="true"] { border-color: var(--line-strong); }
+  .cal-toggle-lbl {
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--txt-mute);
+  }
+  .cal-toggle-val {
+    color: var(--txt);
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 170px;
+  }
+  .cal-toggle-ic { color: var(--txt-mute); font-size: 10px; transition: transform .15s ease-out; }
+  .cal-toggle[aria-expanded="true"] .cal-toggle-ic { transform: rotate(180deg); }
+
+  .cal {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    left: auto;
+    z-index: 30;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 250px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 10px;
+    box-shadow: 0 8px 24px rgba(0,0,0,.15);
+  }
+  .cal[hidden] { display: none; }
+  .cal-todas, .cal-ant {
+    border: 1px solid var(--line);
+    background: var(--card);
+    color: var(--txt);
+    padding: 7px 10px;
+    border-radius: var(--radius);
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: left;
+    transition: border-color .12s, color .12s;
+  }
+  .cal-todas:hover, .cal-ant:hover { border-color: var(--txt-mute); }
+  .cal-todas[aria-pressed="true"] {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--on-accent);
+  }
+  .cal-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .cal-title {
+    font-family: var(--serif);
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--txt);
+    text-align: center;
+    flex: 1;
+  }
+  .cal-nav {
+    width: 28px;
+    height: 28px;
+    border: 1px solid var(--line);
+    background: transparent;
+    color: var(--txt);
+    border-radius: var(--radius);
+    font-size: 16px;
+    line-height: 1;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .cal-nav:hover { border-color: var(--txt-mute); }
+  .cal-nav:disabled { opacity: .35; cursor: default; }
+  .cal-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 3px; }
+  .cal-dow span {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    color: var(--txt-mute);
+    text-align: center;
+    padding: 2px 0;
+  }
+  .cal-day {
+    height: 32px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    background: transparent;
+    color: var(--txt-dim);
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: default;
+    padding: 0;
+  }
+  .cal-day.on {
+    color: var(--txt);
+    border-color: var(--line);
+    background: var(--bg-soft);
+    cursor: pointer;
+    font-weight: 700;
+  }
+  .cal-day.on:hover {
+    background: var(--line);
+    color: var(--txt);
+  }
+  .cal-day.cur {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--on-accent);
+    font-weight: 700;
+  }
+  .cal-day.cur:hover { color: var(--on-accent); background: var(--accent); }
+
+  /* Foco accesible */
   .btn:focus-visible, .chip:focus-visible, .cal-todas:focus-visible, .cal-ant:focus-visible,
-  .cal-nav:focus-visible, .cal-day.on:focus-visible, .search input:focus-visible, .src a:focus-visible{
-    outline:2px solid var(--brand);outline-offset:2px}
-
-  .grid{display:grid;grid-template-columns:1fr;gap:14px;align-content:start}
-  .band{grid-column:1/-1;display:flex;justify-content:space-between;align-items:baseline;
-    gap:12px;flex-wrap:wrap;font-family:var(--serif);font-size:clamp(20px,3vw,25px);
-    font-weight:700;color:var(--txt);margin:48px 0 16px;padding-top:12px;
-    border-top:2px solid var(--txt);border-bottom:0}
-    .band-n{font-family:"Segoe UI",system-ui,sans-serif;font-size:11.5px;font-weight:700;
-    letter-spacing:.06em;text-transform:uppercase;color:var(--txt-mute);white-space:nowrap}
-  .card{border-bottom:1px solid var(--line);background:transparent;
-    padding:30px 0;display:grid;grid-template-columns:1fr;gap:12px}
-  .card:has(+ .band){border-bottom:0}
-  .c-head{display:grid;gap:8px;min-width:0;grid-column:1/-1}
-  .c-main{display:grid;gap:10px;align-content:start;min-width:0}
-  .c-side{display:grid;gap:14px;align-content:start;min-width:0}
-  .ph{aspect-ratio:16/9;border-radius:var(--radius);overflow:hidden;background:var(--bg-soft)}
-  .ph img{width:100%;height:100%;object-fit:cover;display:block}
-  .tags{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-  .tag{font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
-  .tag.ar{color:var(--ar)}
-  .tag.global{color:var(--global)}
-  .tag.deporte{color:var(--deporte)}
-  .date{font-size:12.5px;color:var(--txt-mute);font-weight:600}
-  .card h3{margin:0;font-family:var(--serif);font-size:24px;line-height:1.15;font-weight:700;letter-spacing:-.015em}
-  .card p{margin:0;color:var(--txt-dim);font-size:15px;line-height:1.65}
-  .c-side p{max-width:85ch}
-  p b{font-weight:700;color:var(--txt)}
-  .key{border-left:2px solid var(--line);padding:4px 0 4px 16px;
-    font-size:14px;color:var(--txt-dim);font-style:italic;line-height:1.55}
-  .src{margin-top:auto;padding-top:10px;border-top:1px solid var(--line);
-    display:flex;gap:6px 0;flex-wrap:wrap;align-items:baseline}
-  .src-l{font-size:13px;font-weight:700;color:var(--txt-mute);margin-right:6px}
-  .src a{font-size:13px;font-weight:600;color:var(--txt-dim);text-decoration:none}
-  .src a:hover{color:var(--brand);text-decoration:underline}
-  .src a + a::before{content:" · ";margin:0 10px;color:var(--txt-mute);text-decoration:none}
-  @media (min-width:900px){
-    .card{grid-template-columns:minmax(300px,38%) 1fr;column-gap:34px;row-gap:14px;align-items:start}
+  .cal-nav:focus-visible, .cal-day.on:focus-visible, .search input:focus-visible, .src a:focus-visible {
+    outline: 2px solid var(--line-strong);
+    outline-offset: 2px;
   }
-  .empty{grid-column:1/-1;text-align:center;padding:48px 16px;color:var(--txt-mute);
-    border:1px dashed var(--line);border-radius:var(--radius)}
-  .empty h4{margin:0 0 8px}
-  .empty p{margin:0 0 16px;color:var(--txt-mute)}
-  .empty-btn{background:var(--brand);color:var(--on-brand);border:0;border-radius:6px;padding:8px 16px;font:inherit;cursor:pointer}
-  mark{background:transparent;color:inherit;font-weight:inherit;border-bottom:1.5px solid var(--brand);padding:0}
 
-  footer{margin-top:30px;color:var(--txt-mute);font-size:13px;line-height:1.75}
-  footer p{max-width:none}
-  footer code{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
-    padding:1px 6px;color:var(--txt-dim);font-size:12.5px}
-
-  @media (max-width:620px){
-    .grid{grid-template-columns:1fr}
-    .toolbar .ed-wrap{flex:1 1 100%;margin-top:4px}
-    .cal-day{height:40px;font-size:14px}
-    .cal-title{min-width:120px}
-    .card{gap:12px;padding:20px 0}
-    /* Ajustes móviles (auditoría Antigravity): menos padding, chips y stats más compactos */
-    .wrap{padding:0 16px 40px}
-    .chip{padding:11px 13px;font-size:12.5px}
-    .chips{gap:6px}
-    .stat{padding-right:12px;margin-right:12px}
-    .band,.band:first-child{margin-top:24px;margin-bottom:12px}
+  /* Grid y notas */
+  .grid { display: grid; grid-template-columns: 1fr; gap: 0; align-content: start; }
+  .band {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    flex-wrap: wrap;
+    font-family: var(--serif);
+    font-size: clamp(20px, 2.5vw, 24px);
+    font-weight: 700;
+    color: var(--txt);
+    margin: 36px 0 14px;
+    padding-top: 12px;
+    border-top: 2px solid var(--line-strong);
   }
-  @media print{
-    body{background:#fff;color:#000}
-    .toolbar,.btn{display:none!important}
-    .card{break-inside:avoid;box-shadow:none;border:1px solid #ddd;background:#fff}
-    header.mast{border-color:#ddd}
-    .band{border-color:#bbb}
+  .band:first-child { margin-top: 12px; }
+  .band-n {
+    font-family: var(--sans);
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--txt-mute);
+    white-space: nowrap;
+  }
+
+  /* Card */
+  .card {
+    border-bottom: 1px solid var(--line);
+    padding: 28px 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .card:has(+ .band), .card:last-child { border-bottom: 0; }
+  .c-head { display: grid; gap: 6px; grid-column: 1 / -1; }
+  .tags { display: flex; gap: 8px; flex-wrap: wrap; align-items: baseline; }
+  .tag {
+    font-family: var(--sans);
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    line-height: 1.2;
+  }
+  .tag.ar { color: var(--ar); }
+  .tag.global { color: var(--global); }
+  .tag.deporte { color: var(--deporte); }
+  .card h3 {
+    margin: 0;
+    font-family: var(--serif);
+    font-size: clamp(20px, 2.3vw, 24px);
+    line-height: 1.2;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    color: var(--txt);
+  }
+
+  .c-main { display: grid; gap: 6px; align-content: start; min-width: 0; }
+  .ph {
+    aspect-ratio: 16/9;
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--bg-soft);
+    border: 1px solid var(--line);
+  }
+  .ph img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .ph-cap { font-size: 11.5px; line-height: 1.4; color: var(--txt-mute); font-style: italic; }
+
+  .c-side {
+    display: grid;
+    gap: 10px;
+    align-content: start;
+    min-width: 0;
+    max-width: 82ch;
+  }
+  .card p {
+    margin: 0;
+    color: var(--txt-dim);
+    font-size: 14.5px;
+    line-height: 1.65;
+  }
+  p b { font-weight: 700; color: var(--txt); }
+
+  .src {
+    margin-top: 6px;
+    padding-top: 10px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    gap: 6px 0;
+    flex-wrap: wrap;
+    align-items: baseline;
+  }
+  .src-l { font-size: 11.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--txt-mute); margin-right: 6px; }
+  .src a { font-size: 12.5px; font-weight: 600; color: var(--txt-dim); text-decoration: none; }
+  .src a:hover { color: var(--txt); text-decoration: underline; }
+  .src a + a::before { content: " · "; margin: 0 8px; color: var(--txt-mute); text-decoration: none; }
+
+  @media (min-width: 860px) {
+    .card:has(.c-main) {
+      grid-template-columns: minmax(300px, 38%) 1fr;
+      column-gap: 34px;
+      row-gap: 14px;
+      align-items: start;
+    }
+  }
+
+  .empty {
+    text-align: center;
+    padding: 44px 16px;
+    color: var(--txt-mute);
+    border: 1px dashed var(--line);
+    border-radius: var(--radius);
+    margin: 16px 0;
+  }
+  .empty h4 { margin: 0 0 6px; color: var(--txt); font-family: var(--serif); font-size: 18px; }
+  .empty p { margin: 0 0 14px; font-size: 13.5px; }
+  .empty-btn {
+    background: var(--accent);
+    color: var(--on-accent);
+    border: 0;
+    border-radius: var(--radius);
+    padding: 7px 14px;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  mark {
+    background: color-mix(in srgb, var(--brand) 28%, transparent);
+    color: inherit;
+    border-bottom: 1.5px solid var(--brand);
+    padding: 0 2px;
+    border-radius: 2px;
+  }
+
+  footer {
+    margin-top: 36px;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+    color: var(--txt-mute);
+    font-size: 12.5px;
+    line-height: 1.7;
+  }
+
+  @media (max-width: 768px) {
+    .wrap { padding: 0 16px 40px; }
+    .toolbar { flex-wrap: wrap; gap: 8px; padding: 8px 0; }
+    .search { flex: 1 1 100%; order: 2; }
+    .chips { order: 1; flex: 1 1 auto; overflow-x: auto; padding-bottom: 2px; }
+    .ed-wrap { order: 1; margin-left: auto; }
+    .card { padding: 20px 0; gap: 12px; }
+    .cal { right: auto; left: 0; }
+  }
+
+  @media print {
+    body { background: #fff; color: #000; }
+    .toolbar, .btn { display: none !important; }
+    .card { break-inside: avoid; border: 1px solid #ddd; padding: 16px; margin-bottom: 16px; }
+    header.mast { border-color: #ddd; }
+    .band { border-color: #000; }
   }
 </style>
-  <script>try{var t=localStorage.getItem("panel-tema");document.documentElement.setAttribute("data-theme",t==="dark"?"dark":"light")}catch(e){document.documentElement.setAttribute("data-theme","light")}</script>
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#101318">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="Panel Automotriz">
-  <link rel="apple-touch-icon" href="img/icon-192.png">
+<script>
+  try {
+    var t = localStorage.getItem("panel-tema");
+    document.documentElement.setAttribute("data-theme", t === "dark" ? "dark" : "light");
+  } catch(e) {
+    document.documentElement.setAttribute("data-theme", "light");
+  }
+</script>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#121316">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Panel Automotriz">
+<link rel="apple-touch-icon" href="img/icon-192.png">
 </head>
 <body>
 <div class="wrap">
@@ -216,20 +549,29 @@
         <svg class="tico moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.2A8.6 8.6 0 0 1 9.8 3.5a8.6 8.6 0 1 0 10.7 10.7z"/></svg>
       </button>
     </div>
-    <div class="stats" id="stats"></div>
   </header>
 
   <div class="toolbar">
     <div class="search">
       <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M10.5 3a7.5 7.5 0 1 0 4.55 13.46l4.24 4.24 1.42-1.42-4.24-4.24A7.5 7.5 0 0 0 10.5 3zm0 2a5.5 5.5 0 1 1 0 11 5.5 5.5 0 0 1 0-11z"/></svg>
-      <input type="search" id="q" placeholder="Buscar noticia, marca o palabra…" aria-label="Buscar noticia por palabra">
+      <input type="search" id="q" placeholder="Buscar noticia, marca…" aria-label="Buscar noticia por palabra">
     </div>
+
     <div class="chips" id="chips">
-      <button class="chip on" data-f="all" aria-pressed="true">Todo</button>
-      <button class="chip ar" data-f="ar" aria-pressed="false">Argentina</button>
-      <button class="chip gl" data-f="global" aria-pressed="false">Global</button>
-      <button class="chip dp" data-f="deporte" aria-pressed="false">Competencias</button>
+      <button class="chip on" data-f="all" aria-pressed="true">
+        Todo <span class="chip-cnt" id="cnt-all">0</span>
+      </button>
+      <button class="chip" data-f="ar" aria-pressed="false">
+        <span class="chip-dot ar"></span>Argentina <span class="chip-cnt" id="cnt-ar">0</span>
+      </button>
+      <button class="chip" data-f="global" aria-pressed="false">
+        <span class="chip-dot gl"></span>Global <span class="chip-cnt" id="cnt-gl">0</span>
+      </button>
+      <button class="chip" data-f="deporte" aria-pressed="false">
+        <span class="chip-dot dp"></span>Competencias <span class="chip-cnt" id="cnt-dp">0</span>
+      </button>
     </div>
+
     <div class="ed-wrap">
       <button type="button" class="cal-toggle" id="cal-toggle" aria-expanded="false" aria-controls="cal-panel">
         <span class="cal-toggle-lbl">Edición</span>
@@ -260,15 +602,56 @@
 </div>
 
 <script>
-/* =========================================================================
-   DATOS DEL PANEL
-   Para actualizar: pedile a OpenWork que agregue una sección nueva (un día)
-   al inicio del array EDICIONES. La más nueva va primero y las de fechas
-   anteriores se ordenan de mayor a menor; "anteriores" cierra la lista.
-   Cada nota acepta num, region ("ar" | "global" | "deporte"),
-   fecha, titulo, texto, clave y fuentes [{ t, url }].
-   ========================================================================= */
 const EDICIONES = [
+  {
+    fecha: "2026-10-14",
+    titulo: "Miércoles 14 de octubre de 2026",
+    notas: [
+      {
+        num: 1, region: "ar", fecha: "14 de octubre de 2026",
+        titulo: "Patentamientos: octubre arrancó 18% abajo pero el promedio diario ya supera al de 2025 y proyecta 50.000 unidades",
+        texto: ["Octubre arrancó con una desaceleración en los patentamientos: al corte del 10 de octubre, último día hábil antes del fin de semana largo, se llevaban registradas poco más de <b>11.000 unidades</b>, un 18% menos que a la misma altura de septiembre. Pero el dato cambia cuando se cuenta por días hábiles: con 7 días contra 8 del mes pasado, el promedio diario baja solo 6,8% intermensual, de 1.686 a 1.571 autos por día.", "La comparación con octubre de 2025 es todavía más alentadora: nominalmente hay una caída del 11,8% (11.043 contra 12.530 autos), pero ajustada por días hábiles el promedio diario sube <b>0,3%</b>, de 1.566 a 1.571, y mantiene la progresión de los últimos meses (en agosto la caída era 19,3% y en septiembre 12,6%). Desde una automotriz comentaron que los usuarios «se dieron cuenta que los autos no van a bajar de precio» y que algunos importadores ya hablan de subas.", "Toyota domina la primera muestra del mes con cuatro modelos entre los 10 más vendidos, y la Volkswagen Amarok vuelve a ser lo más vendido de su marca. Con este ritmo, el sector cree que octubre puede repetir las 50.000 matriculaciones de septiembre, que fue el mejor mes del año después de enero."],
+        clave: "Octubre: 11.043 patentamientos al 10/10, -18% nominal pero +0,3% por día hábil vs 2025 · proyección de 50.000 · Toyota con 4 en el top 10, Amarok lidera en VW",
+        img: "img/52-patentamientos-octubre.jpg",
+        fuentes: [
+          { t: "Infobae (14 de octubre)", url: "https://www.infobae.com/economia/2026/10/14/que-va-a-pasar-con-la-venta-de-autos-octubre-arranco-para-abajo-pero-hay-un-dato-que-proyecta-50000-unidades/" }
+        ]
+      },
+      {
+        num: 2, region: "ar", fecha: "14 de octubre de 2026",
+        titulo: "«Nadie está ganando plata en este mercado»: el CEO de Renault Argentina habló en el inicio de la producción de la Niagara",
+        texto: ["Pablo Sibilla, CEO de Renault Argentina, resumió el momento del sector con una frase que repiten en privado terminales y concesionarios: «<b>Nadie gana plata</b> en este mercado, ni los concesionarios, ni las marcas. Nadie». Lo dijo en la planta de Córdoba, donde la marca inició la producción de la pick-up <b>Niagara</b>, que llegará a las calles en noviembre. «No estamos ganando nada, estamos apenas manteniendo el nivel de flotación; la cabeza fuera del agua», graficó.", "El ejecutivo reconoció que hay enojo con sus dichos pero negó ser proteccionista: «No pretendo que Argentina vuelva al pasado». La Niagara es la apuesta nacional de Renault frente al avance chino (ya ~10% del mercado de livianos) y convivirá con la Duster brasileña: pick-up cordobesa para el segmento que más crece y SUV importado del Mercosur para volumen inmediato.", "La declaración llega en una semana de señales mixtas: mientras octubre proyecta 50.000 patentamientos y el cupo 2027 de electrificados abre la pelea con Tesla, Stellantis frenó el 208 en El Palomar y aplicó suspensiones. La rentabilidad, admite Sibilla, sigue siendo la cuenta pendiente de toda la cadena."],
+        clave: "CEO Renault: «nadie gana plata, apenas flotamos» · arranque de la Niagara en Córdoba para noviembre · convive con la Duster brasileña contra el avance chino",
+        img: "img/53-niagara-cordoba.jpg",
+        fuentes: [
+          { t: "Bloomberg Línea (14 de octubre)", url: "https://www.bloomberglinea.com/latinoamerica/argentina/nadie-esta-ganando-plata-en-el-mercado-automotor-aseguro-el-ceo-de-renault-argentina/" },
+          { t: "Infobae (patentamientos)", url: "https://www.infobae.com/economia/2026/10/14/que-va-a-pasar-con-la-venta-de-autos-octubre-arranco-para-abajo-pero-hay-un-dato-que-proyecta-50000-unidades/" }
+        ]
+      },
+      {
+        num: 3, region: "ar", fecha: "14 de octubre de 2026",
+        titulo: "El nuevo cupo de electrificados abre la pelea con Tesla: los importadores temen perder 10.000 unidades y subas del 10%",
+        texto: ["El Gobierno modificó el régimen de importación de vehículos eléctricos e híbridos con arancel cero y elevó el tope de US$ 16.000 a <b>US$ 35.000</b>, lo que habilita el desembarco comercial de Tesla en la Argentina con sus modelos más accesibles. El cupo se mantiene en 50.000 unidades anuales, mitad para terminales y mitad para importadores, pero la eventual entrada de Tesla achicaría el espacio del resto.", "El cálculo que circula es que si Tesla usara <b>10.000 unidades</b>, las demás marcas deberían repartirse las 15.000 restantes del segmento de importadores, lo que obligaría a las chinas a combinar autos con beneficio y otros con el arancel del 35% del Mercosur, con subas de hasta 10% en algunos modelos que hoy entran sin arancel. Los Tesla para Latinoamérica llegarían desde China, donde la compañía tiene sus plantas más competitivas en precio.", "También quedó bajo cuestionamiento el mecanismo de asignación: la norma pide priorizar a quienes ofrezcan los precios públicos más accesibles, pero los valores declarados no se difunden y los consumidores no pueden controlar si las empresas mantienen los precios con los que ganaron la licitación. La pelea combina transparencia del beneficio estatal, competencia con las chinas (80% del cupo 2025-26) y hasta el debate por cámaras y datos conectados."],
+        clave: "Cupo 2027: tope sube a US$ 35.000 y habilita a Tesla · si Tesla toma 10.000, el resto se reparte 15.000 · chinas temen subas de hasta 10%",
+        img: "img/45-cupo-hibridos-electricos.jpg",
+        fuentes: [
+          { t: "Analista Macro (14 de octubre)", url: "https://analistamacro.com/2026/10/14/negocios/el-nuevo-cupo-de-autos-electricos-abre-una-pelea-con-tesla/" },
+          { t: "Infobae (10 de octubre)", url: "https://www.infobae.com/economia/2026/10/10/el-gobierno-emparejara-el-reparto-del-cupo-de-autos-hibridos-y-electricos-importados-libres-de-arancel/" }
+        ]
+      },
+      {
+        num: 4, region: "deporte", fecha: "14 de octubre de 2026",
+        titulo: "El gesto de Briatore con Colapinto tras Singapur: foto juntos y «de vuelta al trabajo en Enstone»",
+        texto: ["Flavio Briatore publicó una foto con Franco Colapinto en sus redes sociales con la descripción «de vuelta al trabajo en Enstone», en un gesto de respaldo al argentino tras el peor fin de semana del año: <b>doble abandono</b> en Singapur, primero por una falla en el acumulador de energía en la Sprint y después por una sospecha de falla en la transmisión en la carrera del domingo. En la imagen ambos aparecen sonrientes y con el pulgar arriba.", "El italiano ya había admitido que Alpine no tomó las decisiones correctas en la elección de neumáticos y que eso afectó a Colapinto y a Gasly. El equipo de Enstone confirmó que investigará los dos abandonos y anunció un <b>paquete importante de mejoras</b> para Austin, donde la F1 vuelve del 23 al 25 de octubre en el inicio de la seguidilla americana (México y Brasil después).", "El respaldo público de Briatore llega cuando Alpine acumula tres Grandes Premios sin puntos y está a 32 de Racing Bulls en la pelea por el quinto puesto de constructores. Colapinto, que había recortado a 375 milésimas la brecha con Gasly en la Sprint, necesita que las mejoras devuelvan la fiabilidad que fue punto fuerte del equipo en la temporada."],
+        clave: "Briatore posteó foto con Colapinto: «de vuelta al trabajo en Enstone» · respaldo tras el doble abandono · Alpine investiga y promete mejoras para Austin",
+        img: "img/54-briatore-colapinto.jpg",
+        fuentes: [
+          { t: "TN (14 de octubre)", url: "https://tn.com.ar/deportes/formula-1/2026/10/14/el-gesto-de-flavio-briatore-con-franco-colapinto-tras-el-gp-de-singapur/" },
+          { t: "Rosario3 (13 de octubre)", url: "https://www.rosario3.com/deportes/alpine-investigara-los-problemas-del-auto-de-franco-colapinto-y-tomara-una-decision-de-cara-al-gp-de-estados-unidos-20261013-0068.html" }
+        ]
+      }
+    ]
+  },
   {
     fecha: "2026-10-13",
     titulo: "Martes 13 de octubre de 2026",
@@ -993,15 +1376,23 @@ el("#themeBtn").onclick = () => {
 };
 
 /* ---------- Resumen de arriba ---------- */
-function pintarStats(notas, secciones){
+function pintarStats(notas){
   const ar = notas.filter(n => n.region === "ar").length;
   const gl = notas.filter(n => n.region === "global").length;
   const dp = notas.filter(n => n.region === "deporte").length;
-  stats.innerHTML = `
-    <div class="stat"><span class="k">Notas</span><span class="v bd">${notas.length}</span></div>
-    <div class="stat"><span class="k">Argentina</span><span class="v ar">${ar}</span></div>
-    <div class="stat"><span class="k">Global</span><span class="v gl">${gl}</span></div>
-    <div class="stat"><span class="k">Competencias</span><span class="v dp">${dp}</span></div>`;
+
+  const cAll = el("#cnt-all"), cAr = el("#cnt-ar"), cGl = el("#cnt-gl"), cDp = el("#cnt-dp");
+  if (cAll) cAll.textContent = notas.length;
+  if (cAr)  cAr.textContent = ar;
+  if (cGl)  cGl.textContent = gl;
+  if (cDp)  cDp.textContent = dp;
+
+  const bAr = el('.chip[data-f="ar"]');
+  const bGl = el('.chip[data-f="global"]');
+  const bDp = el('.chip[data-f="deporte"]');
+  if (bAr) bAr.classList.toggle("zero", ar === 0);
+  if (bGl) bGl.classList.toggle("zero", gl === 0);
+  if (bDp) bDp.classList.toggle("zero", dp === 0);
 }
 
 /* ---------- Calendario de edición ---------- */
@@ -1157,10 +1548,11 @@ function render(){
         </div>
         <h3>${highlightHTML(esc(n.titulo), q)}</h3>
       </div>
+      ${n.img ? `
       <div class="c-main">
-        ${n.img ? `<div class="ph"><img src="${n.img}" alt="" loading="lazy" onerror="this.closest('.ph').remove()"></div>` : ""}
-        <div class="key">${highlightHTML(esc(n.clave), q)}</div>
-      </div>
+        <div class="ph"><img src="${n.img}" alt="" loading="lazy"></div>
+        ${n.epigrafe ? `<div class="ph-cap">${highlightHTML(esc(n.epigrafe), q)}</div>` : ""}
+      </div>` : ""}
       <div class="c-side">
         ${(Array.isArray(n.texto) ? n.texto : [n.texto]).map(p => `<p>${highlightHTML(fmt(p), q)}</p>`).join("")}
         <div class="src">
@@ -1174,7 +1566,7 @@ function render(){
   if (vistaTodas){
     const total = EDICIONES.reduce((s, e) => s + e.notas.length, 0);
     const todas = EDICIONES.reduce((acc, e) => acc.concat(e.notas), []);
-    pintarStats(todas, EDICIONES.length);
+    pintarStats(todas);
     el("#foot-fecha").innerHTML = "<b>Vista activa:</b> Archivo completo, " + total + " notas.";
     const grupos = EDICIONES
       .map(e => ({ titulo: e.titulo || e.fecha, notas: e.notas.filter(match) }))
@@ -1189,7 +1581,7 @@ function render(){
   }
 
   const ed = EDICIONES[edicionIdx];
-  pintarStats(ed.notas, EDICIONES.length);
+  pintarStats(ed.notas);
   el("#foot-fecha").innerHTML = "<b>Sección activa:</b> " + (ed.titulo || ed.fecha) + ".";
   const lista = ed.notas.filter(match);
   const banda = `<h2 class="band">${esc(ed.titulo || ed.fecha)}<span class="band-n">${lista.length} nota${lista.length === 1 ? "" : "s"}${lista.length !== ed.notas.length ? " de " + ed.notas.length : ""}</span></h2>`;
@@ -1252,7 +1644,7 @@ pintaCal();
     });
   }, { passive: true });
 })();
+
 </script>
 </body>
 </html>
-
